@@ -14,14 +14,13 @@ public class Knight extends ChessPiece implements LMovement {
 
 	@Override
 	public ArrayList<Position> getValidMoves() {
-	
-		return null;
+	    return getValidLMoves();
 	}
 
 	@Override
 	public boolean canMove(Position possiblePosition) {
-		
-		return false;
+		this.possiblePosition = possiblePosition;
+		return validMoves.contains(possiblePosition);
 	}
 
 	@Override
@@ -44,14 +43,25 @@ public class Knight extends ChessPiece implements LMovement {
 
 	@Override
 	public void captured() {
-		
-		
+	    statue = false;
 	}
 
 
 	@Override
 	public ArrayList<Position> getValidLMoves() {
-		
-		return null;
+
+		   int xMoves[] = { 2, 1, -1, -2, -2, -1, 1, 2 }; 
+	       int yMoves[] = { 1, 2, 2, 1, -1, -2, -2, -1 }; 
+	 
+	       for (int i = 0; i < 8; i++) { 
+	
+	           int x = currentPosition.getRow() + xMoves[i]; 
+	           int y = currentPosition.getColumn() + yMoves[i]; 
+	
+	           if (x >= 0 && y >= 0 && x <= 7  && y <= 7)
+	        	   validMoves.add(new Position(x,y));           
+	       } 
+	       
+		return validMoves;
 	}
 }

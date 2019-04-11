@@ -3,13 +3,16 @@ package game;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class Board extends JFrame {
+public class Board extends JFrame implements ActionListener {
 
 	public JFrame boardFrame;
 	private JPanel contents;
@@ -31,6 +34,11 @@ public class Board extends JFrame {
 	private ImageIcon blackKing;
 	
 	public Board()
+	{
+		initialize();	
+	}
+	
+	private void initialize()
 	{
 		squares = new JButton[8][8];
 		colorBlack = Color.black;
@@ -55,6 +63,7 @@ public class Board extends JFrame {
 				else
 					squares[i][j].setBackground(colorWhite);
 				
+				squares[i][j].addActionListener(this);
 				contents.add(squares[i][j]);
 			}
 		}
@@ -109,6 +118,20 @@ public class Board extends JFrame {
 		boardFrame.setContentPane(contents);
 		boardFrame.setLocationRelativeTo(null);
 		boardFrame.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		for (int i = 0;i<squares.length;i++)
+		{
+			for (int j=0;j<squares.length;j++)
+			{
+				if (event.getSource() == squares[i][j])
+				{
+					
+				}
+			}
+		}
 		
 	}
 }
