@@ -105,7 +105,7 @@ public class ChessBoard {
 		for (ChessPiece chessPiece : chessPieces)
 		{
 			if (chessPiece.getPieceColor().equals(pieceColor))
-				validPositions.remove(chessPiece.getCurrentPosition);
+				validPositions.remove(chessPiece.getCurrentPosition());
 		}
 	}
 

@@ -7,10 +7,10 @@ import extra.Position;
 public abstract class ChessPiece {
 
 	protected Position currentPosition;
-	private Position possiblePosition;
-	private final String color;
-	private boolean statue;
-	private ArrayList<Position> validMoves;
+	protected Position possiblePosition;
+	protected final String color;
+	protected boolean statue;
+	protected ArrayList<Position> validMoves;
 	
 	public ChessPiece(Position currentPosition, String color)
 	{
@@ -21,11 +21,31 @@ public abstract class ChessPiece {
 	}
 	
 	public abstract ArrayList<Position> getValidMoves();
-	public abstract boolean canMove(Position possiblePosition);
-	public abstract void backToCurrentPosition();
-	public abstract void makeMove();
-	public abstract void capture();
-	public abstract void captured();
+    
+	public void makeMove()
+	{
+		
+	}
 	
+	public void capture()
+	{
+		
+	}
+	
+	public void captured()
+	{
+		statue = false;
+	}
+	
+	public Position getCurrentPosition()
+	{
+		return currentPosition;
+	}
+
+	public String getPieceColor()
+	{
+		return color;
+	}
 	
 }
+

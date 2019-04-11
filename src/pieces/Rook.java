@@ -1,5 +1,6 @@
 package pieces;
 
+
 import java.util.ArrayList;
 
 import extra.Position;
@@ -17,62 +18,63 @@ public class Rook extends ChessPiece implements ForwardMovement , BackwardMoveme
 	@Override
 	public ArrayList<Position> getValidMoves() {
 	
-		return null;
-	}
-
-	@Override
-	public boolean canMove(Position possiblePosition) {
-		
-		return false;
-	}
-
-	@Override
-	public void backToCurrentPosition() {
-		
-		
-	}
-
-	@Override
-	public void makeMove() {
-		
-		
-	}
-
-	@Override
-	public void capture() {
-		
-		
-	}
-
-	@Override
-	public void captured() {
-		
-		
+	  validMoves.addAll(getValidRightMoves());
+	  validMoves.addAll(getValidBackwardMoves());
+	  validMoves.addAll(getValidLeftMoves());
+	  validMoves.addAll(getValidForwardMoves());
+	
+		return validMoves;
 	}
 
 	@Override
 	public ArrayList<Position> getValidLeftMoves() {
+		ArrayList<Position>moveLeft = new ArrayList<Position>();
+		for(int i=currentPosition.getColumn()-1;i>=0;i--)
+		{
+			Position a = new Position(currentPosition.getRow(),i);
+			moveLeft.add(a);
+		}
 		
-		return null;
+		return moveLeft;
 	}
 
 	@Override
 	public ArrayList<Position> getValidRightMoves() {
 		
-		return null;
+        ArrayList<Position>moveRight = new ArrayList<Position>();
+		for(int i=currentPosition.getColumn()+1;i<8;i++)
+		{
+			Position a = new Position(currentPosition.getRow(),i);
+			moveRight.add(a);
+		}
+		return moveRight;
+		
 	}
 
 	@Override
 	public ArrayList<Position> getValidBackwardMoves() {
+        ArrayList<Position>moveBackward = new ArrayList<Position>();
 		
-		return null;
+		for(int i=currentPosition.getRow()+1;i<8;i++)
+		{
+			Position a = new Position(i,currentPosition.getColumn());
+			moveBackward.add(a);
+		}
+		return moveBackward ;
+		
 	}
 
 	@Override
 	public ArrayList<Position> getValidForwardMoves() {
 		
-		return null;
+        ArrayList<Position>moveForward = new ArrayList<Position>();
+		for(int i=currentPosition.getRow()-1;i>=0;i--)
+		{
+			Position a = new Position(i,currentPosition.getColumn());
+			moveForward.add(a);
+		}
+		return moveForward ;
+		
 	}
-
 
 }

@@ -13,44 +13,27 @@ public class Bishop extends ChessPiece implements DiagonalMovement{
 
 	@Override
 	public ArrayList<Position> getValidMoves() {
+		super.validMoves.addAll(getValidDiagonalMoves());
+		return super.validMoves;
+	}
+
 	
-		return null;
-	}
-
-	@Override
-	public boolean canMove(Position possiblePosition) {
-		
-		return false;
-	}
-
-	@Override
-	public void backToCurrentPosition() {
-		
-		
-	}
-
-	@Override
-	public void makeMove() {
-		
-		
-	}
-
-	@Override
-	public void capture() {
-		
-		
-	}
-
-	@Override
-	public void captured() {
-		
-		
-	}
-
 	@Override
 	public ArrayList<Position> getValidDiagonalMoves() {
-		
-		return null;
+		ArrayList<Position> logicalMoves =new ArrayList<Position>();
+		for(int i=0;i<8;i++)
+		{
+			Position p = new Position(super.currentPosition.getRow()+i,super.currentPosition.getColumn()+i);//right up
+			logicalMoves.add(p);
+			Position p1 = new Position(super.currentPosition.getRow()+i,super.currentPosition.getColumn()-i);//left up
+			logicalMoves.add(p1);
+			Position p2 = new Position(super.currentPosition.getRow()-i,super.currentPosition.getColumn()-i);//left down
+			logicalMoves.add(p2);
+			Position p3 = new Position(super.currentPosition.getRow()-i,super.currentPosition.getColumn()+i);//right down
+			logicalMoves.add(p3);
+		}
+		return logicalMoves;
 	}
 
 }
+

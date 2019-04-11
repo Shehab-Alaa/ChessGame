@@ -19,42 +19,13 @@ public class Queen extends ChessPiece implements ForwardMovement , BackwardMovem
 
 	@Override
 	public ArrayList<Position> getValidMoves() {
-		ArrayList<Position> validMoves = getValidForwardMoves();
+		
+		validMoves = getValidForwardMoves();
 		validMoves.addAll(getValidBackwardMoves());
 		validMoves.addAll(getValidLeftMoves());
 		validMoves.addAll(getValidRightMoves());
 		validMoves.addAll(getValidDiagonalMoves());
 		return validMoves;
-	}
-
-	@Override
-	public boolean canMove(Position possiblePosition) {
-		
-		return false;
-	}
-
-	@Override
-	public void backToCurrentPosition() {
-		
-		
-	}
-
-	@Override
-	public void makeMove() {
-		
-		
-	}
-
-	@Override
-	public void capture() {
-		
-		
-	}
-
-	@Override
-	public void captured() {
-		
-		
 	}
 
 
@@ -122,6 +93,6 @@ public class Queen extends ChessPiece implements ForwardMovement , BackwardMovem
 
 	private Boolean checkPosition(Position p) {
 		
-		return (p.getRow() >0 && p.getRow()<8 && p.getColumn()>0 && p.getColumn() <8);
+		return (p.getRow() >= 0 && p.getRow()<8 && p.getColumn() >= 0 && p.getColumn() <8);
 	}
 }

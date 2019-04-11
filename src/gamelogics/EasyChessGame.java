@@ -20,21 +20,17 @@ public class EasyChessGame extends ChessGameLogic{
 	public void gameLogic(Position position, JButton[][] squares) {
 		currentPiece = chessBoard.getPiece(position);
 		colorValidPositions(currentPiece , squares);
-		
 	}
 
 	public void colorValidPositions(ChessPiece chessPiece , JButton[][] squares)
 	{
 		ArrayList<Position> positionsHolder = chessBoard.getValidPositions(chessPiece);
 		
+		
 		for (Position position : positionsHolder)
 		{
 			squares[position.getRow()][position.getColumn()].setBorder(new LineBorder(Color.green , 3));
 		}
 	}
-
-
-	
-	// cannot move if the king will be captured;
 	
 }

@@ -11,41 +11,10 @@ public class Knight extends ChessPiece implements LMovement {
 		super(currentPosition, color);
 	}
 
-
 	@Override
 	public ArrayList<Position> getValidMoves() {
 	    return getValidLMoves();
 	}
-
-	@Override
-	public boolean canMove(Position possiblePosition) {
-		this.possiblePosition = possiblePosition;
-		return validMoves.contains(possiblePosition);
-	}
-
-	@Override
-	public void backToCurrentPosition() {
-		
-		
-	}
-
-	@Override
-	public void makeMove() {
-		
-		
-	}
-
-	@Override
-	public void capture() {
-		
-		
-	}
-
-	@Override
-	public void captured() {
-	    statue = false;
-	}
-
 
 	@Override
 	public ArrayList<Position> getValidLMoves() {

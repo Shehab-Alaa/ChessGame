@@ -39,6 +39,16 @@ abstract public class ChessGameLogic {
 	   return currentPiece;
    }
    
+   public Player getWhitePlayer()
+   {
+	   return playerOne;
+   }
+   
+   public Player getBlackPlayer()
+   {
+	 return playerTwo;   
+   }
+   
    public void endGame()
    {
 	   

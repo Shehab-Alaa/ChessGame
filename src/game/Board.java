@@ -128,7 +128,7 @@ public class Board extends JFrame implements ActionListener {
 			{
 				if (event.getSource() == squares[i][j])
 				{
-					
+					// Game Logic Part
 				}
 			}
 		}
