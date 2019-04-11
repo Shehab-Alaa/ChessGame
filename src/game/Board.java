@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 public class Board extends JFrame {
 
-	public JFrame boardFrame;
+	public static JFrame boardFrame;
 	private JPanel contents;
 	private JButton[][] squares;
 	private Color colorBlack;

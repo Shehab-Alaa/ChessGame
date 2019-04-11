@@ -6,7 +6,7 @@ import extra.Position;
 
 public abstract class ChessPiece {
 
-	private Position currentPosition;
+	protected Position currentPosition;
 	private Position possiblePosition;
 	private final String color;
 	private boolean statue;
