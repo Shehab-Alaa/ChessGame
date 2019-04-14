@@ -16,6 +16,7 @@ public class ChessBoard {
 	private static ChessBoard chessBoard;
 	private static ArrayList<ChessPiece> chessPieces;
 	private static ArrayList<ChessPiece> capturedPieces;
+	private static ChessPiece currentPiece;
 	
 	public static ChessBoard getChessBoard()
 	{
@@ -71,53 +72,131 @@ public class ChessBoard {
 	public static ArrayList<Position> getValidPositions(ChessPiece chessPiece)
 	{
 		ArrayList<Position> validPositions = chessPiece.getValidMoves();
+		currentPiece = chessPiece;
 		
 		if (chessPiece instanceof Pawn)
-			filterPawnMovements(validPositions , chessPiece.getPieceColor());
+			filterPawnMovements(validPositions);
 		
 		else if (chessPiece instanceof Bishop)
-			filterBishopMovements(validPositions , chessPiece.getPieceColor());
+			filterBishopMovements(validPositions);
 		
 		else if (chessPiece instanceof Rook)
-			filterRookMovements(validPositions , chessPiece.getPieceColor());
+			filterRookMovements(validPositions);
 		
 		else if (chessPiece instanceof Knight)
-			filterKnightMovements(validPositions , chessPiece.getPieceColor());
+			filterKnightMovements(validPositions);
 		
 		else if (chessPiece instanceof Queen)
-			filterQueenMovements(validPositions , chessPiece.getPieceColor());
+			filterQueenMovements(validPositions);
 		
 		else if (chessPiece instanceof King)
-			filterKingMovements(validPositions , chessPiece.getPieceColor());
+			filterKingMovements(validPositions);
 		
 		return validPositions;
 	}
 	
-	private static void filterKingMovements(ArrayList<Position> validPositions , String pieceColor) {
+	private static void filterKingMovements(ArrayList<Position> validPositions) {
 		
 	}
 
-	private static void filterQueenMovements(ArrayList<Position> validPositions , String pieceColor) {
-		
-	}
-
-	private static void filterKnightMovements(ArrayList<Position> validPositions , String pieceColor) {
+	private static void filterQueenMovements(ArrayList<Position> validPositions) {
 		for (ChessPiece chessPiece : chessPieces)
 		{
-			if (chessPiece.getPieceColor().equals(pieceColor))
+			if (chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
+			{
+				filterPositionsBlocked(validPositions.indexOf(chessPiece.getCurrentPosition()), validPositions);
 				validPositions.remove(chessPiece.getCurrentPosition());
+			}
+			else
+				filterPositionsBlocked(validPositions.indexOf(chessPiece.getCurrentPosition()), validPositions);
+		}
+	}
+	
+	private static void filterPositionsBlocked(int indextOfBlockingPiece, ArrayList<Position> validPosition) {
+		Position blockingPiece = validPosition.get(indextOfBlockingPiece);
+		
+		//forward
+		if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() == 0)
+		{
+				for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
+					if(blockingPiece.getRow() - validPosition.get(i).getRow() > 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() == 0)
+						validPosition.remove(i);
+		}
+		
+		//backward
+		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() < 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() == 0)
+		{
+			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
+				if(blockingPiece.getRow() - validPosition.get(i).getRow() < 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() == 0)
+					validPosition.remove(i);
+		}
+		
+		//right
+		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() == 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() < 0)
+		{
+			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
+				if(blockingPiece.getRow() - validPosition.get(i).getRow() == 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() < 0)
+					validPosition.remove(i);
+		}
+		
+		//left
+		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() == 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() > 0)
+		{
+			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
+				if(blockingPiece.getRow() - validPosition.get(i).getRow() == 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() > 0)
+					validPosition.remove(i);
+		}
+		
+		//northwest
+		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() > 0)
+		{
+			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
+				if(blockingPiece.getRow() - validPosition.get(i).getRow() > 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() > 0)
+					validPosition.remove(i);
+		}
+		
+		//northeast
+		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() < 0)
+		{
+			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
+				if(blockingPiece.getRow() - validPosition.get(i).getRow() > 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() < 0)
+					validPosition.remove(i);
+		}
+		
+		//southwest
+		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() < 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() > 0)
+		{
+			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
+				if(blockingPiece.getRow() - validPosition.get(i).getRow() < 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() > 0)
+					validPosition.remove(i);
+		}
+		
+		//southeast
+		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() < 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() < 0)
+		{
+			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
+				if(blockingPiece.getRow() - validPosition.get(i).getRow() < 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() < 0)
+					validPosition.remove(i);
 		}
 	}
 
-	private static void filterRookMovements(ArrayList<Position> validPositions , String pieceColor) {
+	private static void filterKnightMovements(ArrayList<Position> validPositions) {
+		for (ChessPiece chessPiece : chessPieces)
+		{
+			if (chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
+				validPositions.remove(chessPiece.getCurrentPosition());
+		}
+	}
+	
+	private static void filterRookMovements(ArrayList<Position> validPositions) {
 		
 	}
 
-	private static void filterBishopMovements(ArrayList<Position> validPositions , String pieceColor) {
+	private static void filterBishopMovements(ArrayList<Position> validPositions) {
 		
 	}
 
-	private static void filterPawnMovements(ArrayList<Position> validPositions , String pieceColor) {
+	private static void filterPawnMovements(ArrayList<Position> validPositions) {
 		
 	}
 
