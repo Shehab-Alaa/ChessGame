@@ -3,7 +3,6 @@ package pieces;
 import java.util.ArrayList;
 
 import extra.Position;
-import game.Board;
 import movements.BackwardMovement;
 import movements.DiagonalMovement;
 import movements.ForwardMovement;
