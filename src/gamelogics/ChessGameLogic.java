@@ -1,6 +1,7 @@
 package gamelogics;
 
 import java.awt.Color;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,7 +12,7 @@ import game.ChessBoard;
 import pieces.ChessPiece;
 import players.Player;
 
-abstract public class ChessGameLogic {
+abstract public class ChessGameLogic implements ActionListener {
    protected Player playerOne;
    protected Player playerTwo;
    protected static ChessBoard chessBoard;
@@ -28,6 +29,13 @@ abstract public class ChessGameLogic {
 	   currentPiece = null;
 	   playTurn = 0;
 	   squares = chessBoard.getSquares();
+	   for(int i=0; i<8;i++)
+		{
+			for(int j=0;j<8;j++)
+			{
+				squares[i][j].addActionListener(this);
+			}
+		}
    }
    
 

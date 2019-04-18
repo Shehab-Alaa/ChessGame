@@ -15,19 +15,10 @@ import extra.Position;
 import pieces.ChessPiece;
 import players.Player;
 
-public class EasyChessGame extends ChessGameLogic implements ActionListener{
+public class EasyChessGame extends ChessGameLogic{
 
 	public EasyChessGame(Player playerOne, Player playerTwo) {
 		super(playerOne, playerTwo);
-		
-		for(int i=0; i<8;i++)
-		{
-			for(int j=0;j<8;j++)
-			{
-				squares[i][j].addActionListener(this);
-			}
-		}
-		
 	}
 
 
@@ -82,7 +73,6 @@ public class EasyChessGame extends ChessGameLogic implements ActionListener{
 		for (Position position : chessBoard.getValidPositions(currentPiece))
 		{
 			squares[position.getRow()][position.getColumn()].setBorder(UIManager.getBorder("Button.border"));
-		     // new button and get it's border;
 		}
 	}
 	
