@@ -3,7 +3,6 @@ package pieces;
 import java.util.ArrayList;
 
 import extra.Position;
-import game.Board;
 import movements.BackwardMovement;
 import movements.DiagonalMovement;
 import movements.ForwardMovement;
@@ -18,7 +17,7 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 	}
 	@Override
 	public ArrayList<Position> getValidMoves() {
-
+        validMoves = new ArrayList<>();
 		validMoves = getValidBackwardMoves();
 		validMoves.addAll(getValidForwardMoves());
 		validMoves.addAll(getValidLeftMoves());
