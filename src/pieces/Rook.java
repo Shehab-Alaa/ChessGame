@@ -17,7 +17,7 @@ public class Rook extends ChessPiece implements ForwardMovement , BackwardMoveme
 	
 	@Override
 	public ArrayList<Position> getValidMoves() {
-	
+	  validMoves = new ArrayList<>();
 	  validMoves.addAll(getValidRightMoves());
 	  validMoves.addAll(getValidBackwardMoves());
 	  validMoves.addAll(getValidLeftMoves());

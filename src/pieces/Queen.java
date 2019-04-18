@@ -18,7 +18,7 @@ public class Queen extends ChessPiece implements ForwardMovement , BackwardMovem
 
 	@Override
 	public ArrayList<Position> getValidMoves() {
-		
+		validMoves = new ArrayList<>();
 		validMoves = getValidForwardMoves();
 		validMoves.addAll(getValidBackwardMoves());
 		validMoves.addAll(getValidLeftMoves());

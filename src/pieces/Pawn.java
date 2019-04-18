@@ -14,6 +14,7 @@ public class Pawn extends ChessPiece implements ForwardMovement , DiagonalMoveme
 
 	@Override
 	public ArrayList<Position> getValidMoves() {
+		validMoves = new ArrayList<>();
 		validMoves.addAll(getValidForwardMoves());
 		validMoves.addAll(getValidDiagonalMoves());
 		return validMoves;

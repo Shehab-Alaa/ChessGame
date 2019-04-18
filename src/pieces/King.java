@@ -17,7 +17,7 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 	}
 	@Override
 	public ArrayList<Position> getValidMoves() {
-
+        validMoves = new ArrayList<>();
 		validMoves = getValidBackwardMoves();
 		validMoves.addAll(getValidForwardMoves());
 		validMoves.addAll(getValidLeftMoves());

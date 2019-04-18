@@ -13,6 +13,7 @@ public class Bishop extends ChessPiece implements DiagonalMovement{
 
 	@Override
 	public ArrayList<Position> getValidMoves() {
+		validMoves = new ArrayList<>();
 		super.validMoves.addAll(getValidDiagonalMoves());
 		return super.validMoves;
 	}

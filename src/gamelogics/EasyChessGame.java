@@ -1,6 +1,8 @@
 package gamelogics;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -13,10 +15,19 @@ import extra.Position;
 import pieces.ChessPiece;
 import players.Player;
 
-public class EasyChessGame extends ChessGameLogic{
+public class EasyChessGame extends ChessGameLogic implements ActionListener{
 
 	public EasyChessGame(Player playerOne, Player playerTwo) {
 		super(playerOne, playerTwo);
+		
+		for(int i=0; i<8;i++)
+		{
+			for(int j=0;j<8;j++)
+			{
+				squares[i][j].addActionListener(this);
+			}
+		}
+		
 	}
 
 
@@ -29,13 +40,14 @@ public class EasyChessGame extends ChessGameLogic{
 		
 	}
 	
-	public static void pressedButton(Position buttonPosition)
+	private void pressedButton(Position buttonPosition)
 	{		
 		if (!squares[buttonPosition.getRow()][buttonPosition.getColumn()].getBorder().equals(new JButton().getBorder()))
 	      {
 	    	 // colored
 	    	  if(chessBoard.hasPieceInPositon(buttonPosition))
 	    	  {
+	    		  System.out.println("iam here");
 	    		  ChessPiece enemy = chessBoard.getPiece(buttonPosition);
 	    		  squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(null);
 	    		  chessBoard.pieceCaptured(enemy);
@@ -77,6 +89,24 @@ public class EasyChessGame extends ChessGameLogic{
 	public static boolean hasCurrentPiece()
 	{
 		return(currentPiece != null);
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		for (int i = 0;i<squares.length;i++)
+		{
+			for (int j=0;j<squares.length;j++)
+			{
+				if (event.getSource() == squares[i][j])
+				{
+					ChessPiece holder = chessBoard.getPiece(new Position(i,j));
+					if(squares[i][j].getIcon()==null || EasyChessGame.playTurn % 2 == 0 && holder.getPieceColor().equals("White") 
+							||EasyChessGame.playTurn % 2 == 1 && holder.getPieceColor().equals("Black"))
+						           pressedButton(new Position(i,j));
+				}
+			}
+		}
 	}
 	
 	

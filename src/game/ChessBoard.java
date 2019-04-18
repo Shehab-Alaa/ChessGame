@@ -22,7 +22,7 @@ import pieces.Pawn;
 import pieces.Queen;
 import pieces.Rook;
 
-public class ChessBoard extends JFrame implements ActionListener{
+public class ChessBoard extends JFrame{
 
 	private static ChessBoard chessBoard;
 	private static ArrayList<ChessPiece> chessPieces;
@@ -108,7 +108,6 @@ public class ChessBoard extends JFrame implements ActionListener{
 				else
 					squares[i][j].setBackground(colorWhite);
 				
-				squares[i][j].addActionListener(this);
 				contents.add(squares[i][j]);
 			}
 		}
@@ -283,27 +282,41 @@ public class ChessBoard extends JFrame implements ActionListener{
 	}
 
 	private static void filterKnightMovements(ArrayList<Position> validPositions) {
-		for (ChessPiece chessPiece : chessPieces)
+	
+		for  (ChessPiece chessPiece : chessPieces)
 		{
-			if (chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
-				validPositions.remove(chessPiece.getCurrentPosition());
+			if (currentPiece.getPieceColor().equals(chessPiece.getPieceColor()) &&
+					!currentPiece.getCurrentPosition().equals(chessPiece.getCurrentPosition()))
+			{
+				for (int i =0;i<validPositions.size();i++)
+				{
+					if (validPositions.get(i).getRow() == chessPiece.getCurrentPosition().getRow() &&
+							validPositions.get(i).getColumn() == chessPiece.getCurrentPosition().getColumn())
+					{
+                         validPositions.remove(i);
+                         break;
+					}
+				}
+			}
 		}
+		
+		
 	}
 
 	private static void filterRookMovements(ArrayList<Position> validPositions) {
+
 		Position  currentpostion = currentPiece.getCurrentPosition();
 		for(ChessPiece chessPiece : chessPieces)
 		{
 			if(chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
 			{
-				
 				Position piecePostion  = chessPiece.getCurrentPosition();
 				if(currentpostion.getColumn()<piecePostion.getColumn()&&currentpostion.getRow()==piecePostion.getRow())
 				{
 					for(int i=piecePostion.getColumn();i<8;i++)
 					{
 						Position a = new Position(piecePostion.getRow(),i);
-						validPositions.remove(a);
+						filterRookbyIndex(a,validPositions);
 					}
 				}
 				if(currentpostion.getColumn()>piecePostion.getColumn()&&currentpostion.getRow()==piecePostion.getRow())
@@ -311,7 +324,7 @@ public class ChessBoard extends JFrame implements ActionListener{
 					for(int i=piecePostion.getColumn();i>=0;i--)
 					{
 						Position a = new Position(piecePostion.getRow(),i);
-						validPositions.remove(a);
+						filterRookbyIndex(a,validPositions);
 					}
 				}
 				if(currentpostion.getRow()<piecePostion.getRow()&&currentpostion.getColumn()==piecePostion.getColumn())
@@ -319,7 +332,7 @@ public class ChessBoard extends JFrame implements ActionListener{
 					for(int i=piecePostion.getRow();i<8;i++)
 					{
 						Position a = new Position(i,piecePostion.getColumn());
-						validPositions.remove(a);
+						filterRookbyIndex(a,validPositions);
 					}
 				}
 				if(currentpostion.getRow()>piecePostion.getRow()&&currentpostion.getColumn()==piecePostion.getColumn())
@@ -327,7 +340,7 @@ public class ChessBoard extends JFrame implements ActionListener{
 					for(int i=piecePostion.getRow();i>=0;i--)
 					{
 						Position a = new Position(i,piecePostion.getColumn());
-						validPositions.remove(a);
+						filterRookbyIndex(a,validPositions);
 					}
 				}
 		}
@@ -339,7 +352,7 @@ public class ChessBoard extends JFrame implements ActionListener{
 					for(int i=piecePostion2.getColumn()+1;i<8;i++)
 					{
 						Position a = new Position(piecePostion2.getRow(),i);
-						validPositions.remove(a);
+						filterRookbyIndex(a,validPositions);
 					}
 				}
 				if(currentpostion.getColumn()>piecePostion2.getColumn()&&currentpostion.getRow()==piecePostion2.getRow())
@@ -347,7 +360,7 @@ public class ChessBoard extends JFrame implements ActionListener{
 					for(int i=piecePostion2.getColumn()-1;i>=0;i--)
 					{
 						Position a = new Position(piecePostion2.getRow(),i);
-						validPositions.remove(a);
+						filterRookbyIndex(a,validPositions);
 					}
 				}
 				if(currentpostion.getRow()<piecePostion2.getRow()&&currentpostion.getColumn()==piecePostion2.getColumn())
@@ -355,7 +368,7 @@ public class ChessBoard extends JFrame implements ActionListener{
 					for(int i=piecePostion2.getRow()+1;i<8;i++)
 					{
 						Position a = new Position(i,piecePostion2.getColumn());
-						validPositions.remove(a);
+						filterRookbyIndex(a,validPositions);
 					}
 				}
 				if(currentpostion.getRow()>piecePostion2.getRow()&&currentpostion.getColumn()==piecePostion2.getColumn())
@@ -363,10 +376,22 @@ public class ChessBoard extends JFrame implements ActionListener{
 					for(int i=piecePostion2.getRow()-1;i>=0;i--)
 					{
 						Position a = new Position(i,piecePostion2.getColumn());
-						validPositions.remove(a);
+						filterRookbyIndex(a,validPositions);
 					}
 				}
 				
+			}
+		}
+	}
+	
+	private static void filterRookbyIndex(Position p ,ArrayList<Position>validposition)
+	{
+		for(int i=0;i<validposition.size();i++)
+		{
+			if(validposition.get(i).getRow()==p.getRow()&&validposition.get(i).getColumn()==p.getColumn())
+			{
+				validposition.remove(i);
+				break;
 			}
 		}
 	}
@@ -458,25 +483,6 @@ public class ChessBoard extends JFrame implements ActionListener{
 	public static JButton[][] getSquares()
 	{
 		return squares;
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent event) {
-		for (int i = 0;i<squares.length;i++)
-		{
-			for (int j=0;j<squares.length;j++)
-			{
-				if (event.getSource() == squares[i][j])
-				{
-					
-					ChessPiece holder = getPiece(new Position(i,j));
-					if(squares[i][j].getIcon()==null || EasyChessGame.playTurn % 2 == 0 && holder.getPieceColor().equals("White") 
-							||EasyChessGame.playTurn % 2 == 1 && holder.getPieceColor().equals("Black"))
-						   EasyChessGame.pressedButton(new Position(i,j));
-				}
-			}
-		}
-		
 	}
 	
 }

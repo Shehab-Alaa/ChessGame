@@ -19,6 +19,8 @@ public class Knight extends ChessPiece implements LMovement {
 	@Override
 	public ArrayList<Position> getValidLMoves() {
 
+		validMoves = new ArrayList<>();
+		
 		   int xMoves[] = { 2, 1, -1, -2, -2, -1, 1, 2 }; 
 	       int yMoves[] = { 1, 2, 2, 1, -1, -2, -2, -1 }; 
 	 
