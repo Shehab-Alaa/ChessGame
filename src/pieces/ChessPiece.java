@@ -22,6 +22,11 @@ public abstract class ChessPiece {
 	
 	public abstract ArrayList<Position> getValidMoves();
     
+	public void setCurrentPosition(Position currentPosition)
+	{
+		this.currentPosition = currentPosition;
+	}
+	
 	public void makeMove()
 	{
 		
