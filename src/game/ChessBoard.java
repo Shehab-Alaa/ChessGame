@@ -201,83 +201,113 @@ public class ChessBoard extends JFrame{
 	}
 
 	private static void filterQueenMovements(ArrayList<Position> validPositions) {
-		for (ChessPiece chessPiece : chessPieces)
+		for (int i=0; i<chessPieces.size();i++)
 		{
-			if (chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
+			for (int j=0;j<validPositions.size();j++)
 			{
-				filterPositionsBlocked(validPositions.indexOf(chessPiece.getCurrentPosition()), validPositions);
-				validPositions.remove(chessPiece.getCurrentPosition());
+				if (chessPieces.get(i).getCurrentPosition().getRow() == validPositions.get(j).getRow() && chessPieces.get(i).getCurrentPosition().getColumn() == validPositions.get(j).getColumn())
+				{
+					if (chessPieces.get(i).getPieceColor().equals(currentPiece.getPieceColor()))
+						validPositions.remove(j);
+					
+					//forward
+					if(currentPiece.getCurrentPosition().getRow() - chessPieces.get(i).getCurrentPosition().getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - chessPieces.get(i).getCurrentPosition().getColumn() == 0)
+					{
+							int k=0; 
+							while (k<validPositions.size())
+							{
+								if(chessPieces.get(i).getCurrentPosition().getRow() - validPositions.get(k).getRow() > 0 && chessPieces.get(i).getCurrentPosition().getColumn() - validPositions.get(k).getColumn() == 0)
+									validPositions.remove(k);
+								else k++;
+							}
+					}
+					
+					//backward
+					else if(currentPiece.getCurrentPosition().getRow() - chessPieces.get(i).getCurrentPosition().getRow() < 0 && currentPiece.getCurrentPosition().getColumn() - chessPieces.get(i).getCurrentPosition().getColumn() == 0)
+					{
+							int k=j; 
+							while (k<validPositions.size())
+							{
+								if(chessPieces.get(i).getCurrentPosition().getRow() - validPositions.get(k).getRow() < 0 && chessPieces.get(i).getCurrentPosition().getColumn() - validPositions.get(k).getColumn() == 0)
+									validPositions.remove(k);
+								else k++;
+							}
+					}
+					
+					//left
+					else if(currentPiece.getCurrentPosition().getRow() - chessPieces.get(i).getCurrentPosition().getRow() == 0 && currentPiece.getCurrentPosition().getColumn() - chessPieces.get(i).getCurrentPosition().getColumn() > 0)
+					{
+							int k=0; 
+							while (k<validPositions.size())
+							{
+								if(chessPieces.get(i).getCurrentPosition().getRow() - validPositions.get(k).getRow() == 0 && chessPieces.get(i).getCurrentPosition().getColumn() - validPositions.get(k).getColumn() > 0)
+									validPositions.remove(k);
+								else k++;
+							}
+					}
+					
+					//right
+					else if(currentPiece.getCurrentPosition().getRow() - chessPieces.get(i).getCurrentPosition().getRow() == 0 && currentPiece.getCurrentPosition().getColumn() - chessPieces.get(i).getCurrentPosition().getColumn() < 0)
+					{
+							int k=j; 
+							while (k<validPositions.size())
+							{
+								if(chessPieces.get(i).getCurrentPosition().getRow() - validPositions.get(k).getRow() == 0 && chessPieces.get(i).getCurrentPosition().getColumn() - validPositions.get(k).getColumn() < 0)
+									validPositions.remove(k);
+								else k++;
+							}
+					}
+					
+					//northweast
+					else if(currentPiece.getCurrentPosition().getRow() - chessPieces.get(i).getCurrentPosition().getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - chessPieces.get(i).getCurrentPosition().getColumn() < 0)
+					{
+							int k=0; 
+							while (k<validPositions.size())
+							{
+								if(chessPieces.get(i).getCurrentPosition().getRow() - validPositions.get(k).getRow() > 0 && chessPieces.get(i).getCurrentPosition().getColumn() - validPositions.get(k).getColumn() < 0)
+									validPositions.remove(k);
+								else k++;
+							}
+					}
+					
+					//northwest
+					else if(currentPiece.getCurrentPosition().getRow() - chessPieces.get(i).getCurrentPosition().getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - chessPieces.get(i).getCurrentPosition().getColumn() > 0)
+					{
+							int k=0; 
+							while (k<validPositions.size())
+							{
+								if(chessPieces.get(i).getCurrentPosition().getRow() - validPositions.get(k).getRow() > 0 && chessPieces.get(i).getCurrentPosition().getColumn() - validPositions.get(k).getColumn() > 0)
+									validPositions.remove(k);
+								else k++;
+							}
+					}
+					
+					//southwest
+					else if(currentPiece.getCurrentPosition().getRow() - chessPieces.get(i).getCurrentPosition().getRow() < 0 && currentPiece.getCurrentPosition().getColumn() - chessPieces.get(i).getCurrentPosition().getColumn() > 0)
+					{
+							int k=0; 
+							while (k<validPositions.size())
+							{
+								if(chessPieces.get(i).getCurrentPosition().getRow() - validPositions.get(k).getRow() < 0 && chessPieces.get(i).getCurrentPosition().getColumn() - validPositions.get(k).getColumn() > 0)
+									validPositions.remove(k);
+								else k++;
+							}
+					}
+					
+					//southeast
+					else if(currentPiece.getCurrentPosition().getRow() - chessPieces.get(i).getCurrentPosition().getRow() < 0 && currentPiece.getCurrentPosition().getColumn() - chessPieces.get(i).getCurrentPosition().getColumn() < 0)
+					{
+							int k=0; 
+							while (k<validPositions.size())
+							{
+								if(chessPieces.get(i).getCurrentPosition().getRow() - validPositions.get(k).getRow() < 0 && chessPieces.get(i).getCurrentPosition().getColumn() - validPositions.get(k).getColumn() < 0)
+									validPositions.remove(k);
+								else k++;
+							}
+					}
+					break;
+				}
 			}
-			else
-				filterPositionsBlocked(validPositions.indexOf(chessPiece.getCurrentPosition()), validPositions);
-		}	
-	}
-	
-	private static void filterPositionsBlocked(int indextOfBlockingPiece, ArrayList<Position> validPosition) {
-		Position blockingPiece = validPosition.get(indextOfBlockingPiece);
-		
-		//forward
-		if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() == 0)
-		{
-				for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
-					if(blockingPiece.getRow() - validPosition.get(i).getRow() > 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() == 0)
-						validPosition.remove(i);
-		}
-		
-		//backward
-		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() < 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() == 0)
-		{
-			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
-				if(blockingPiece.getRow() - validPosition.get(i).getRow() < 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() == 0)
-					validPosition.remove(i);
-		}
-		
-		//right
-		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() == 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() < 0)
-		{
-			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
-				if(blockingPiece.getRow() - validPosition.get(i).getRow() == 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() < 0)
-					validPosition.remove(i);
-		}
-		
-		//left
-		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() == 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() > 0)
-		{
-			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
-				if(blockingPiece.getRow() - validPosition.get(i).getRow() == 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() > 0)
-					validPosition.remove(i);
-		}
-		
-		//northwest
-		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() > 0)
-		{
-			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
-				if(blockingPiece.getRow() - validPosition.get(i).getRow() > 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() > 0)
-					validPosition.remove(i);
-		}
-		
-		//northeast
-		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() < 0)
-		{
-			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
-				if(blockingPiece.getRow() - validPosition.get(i).getRow() > 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() < 0)
-					validPosition.remove(i);
-		}
-		
-		//southwest
-		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() < 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() > 0)
-		{
-			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
-				if(blockingPiece.getRow() - validPosition.get(i).getRow() < 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() > 0)
-					validPosition.remove(i);
-		}
-		
-		//southeast
-		else if(currentPiece.getCurrentPosition().getRow() - blockingPiece.getRow() < 0 && currentPiece.getCurrentPosition().getColumn() - blockingPiece.getColumn() < 0)
-		{
-			for (int i=indextOfBlockingPiece+1; i<validPosition.size(); i++)
-				if(blockingPiece.getRow() - validPosition.get(i).getRow() < 0 && blockingPiece.getColumn() - validPosition.get(i).getColumn() < 0)
-					validPosition.remove(i);
 		}
 	}
 

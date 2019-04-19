@@ -38,7 +38,6 @@ public class EasyChessGame extends ChessGameLogic{
 	    	 // colored
 	    	  if(chessBoard.hasPieceInPositon(buttonPosition))
 	    	  {
-	    		  System.out.println("iam here");
 	    		  ChessPiece enemy = chessBoard.getPiece(buttonPosition);
 	    		  squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(null);
 	    		  chessBoard.pieceCaptured(enemy);
