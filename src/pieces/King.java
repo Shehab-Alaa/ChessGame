@@ -11,13 +11,13 @@ import movements.RightSideMovement;
 
 public class King extends ChessPiece implements ForwardMovement , BackwardMovement , RightSideMovement , LeftSideMovement , DiagonalMovement{
 
+	private ArrayList<Position> movesHolder;
 
 	public King(Position currentPosition, String color) {
 		super(currentPosition, color);
 	}
 	@Override
 	public ArrayList<Position> getValidMoves() {
-        validMoves = new ArrayList<>();
 		validMoves = getValidBackwardMoves();
 		validMoves.addAll(getValidForwardMoves());
 		validMoves.addAll(getValidLeftMoves());
@@ -29,12 +29,12 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 
 	@Override
 	public ArrayList<Position> getValidDiagonalMoves() {
-		ArrayList<Position> movesHolder =new ArrayList<>();
+		movesHolder =new ArrayList<>();
 
 		fillList(1, 1);
+		fillList(1, -1);		
 		fillList(-1, -1);
 		fillList(-1, 1);
-		fillList(1, -1);		
 
 		return movesHolder;
 	}
@@ -42,7 +42,7 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 
 	@Override
 	public ArrayList<Position> getValidLeftMoves() {
-		ArrayList<Position> movesHolder =new ArrayList<>();
+		movesHolder =new ArrayList<>();
 		
 		fillList(0, -1);
 		
@@ -52,7 +52,7 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 
 	@Override
 	public ArrayList<Position> getValidRightMoves() {		
-		ArrayList<Position> movesHolder =new ArrayList<>();
+		movesHolder =new ArrayList<>();
 		
 		fillList(0, 1);
 
@@ -62,7 +62,7 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 
 	@Override
 	public ArrayList<Position> getValidBackwardMoves() {
-		ArrayList<Position> movesHolder =new ArrayList<>();
+		movesHolder =new ArrayList<>();
 		
 		fillList(1, 0);
 
@@ -72,7 +72,7 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 
 	@Override
 	public ArrayList<Position> getValidForwardMoves() {
-		ArrayList<Position> movesHolder =new ArrayList<>();
+		movesHolder =new ArrayList<>();
 		
 		fillList(-1, 0);
 	
@@ -83,7 +83,7 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 	
 	private void  fillList(int i,int j) {
 		if(check(currentPosition.getRow()+i,currentPosition.getColumn()+j))
-			validMoves.add(new Position(currentPosition.getRow()+i, currentPosition.getColumn()+j));
+			movesHolder.add(new Position(currentPosition.getRow()+i, currentPosition.getColumn()+j));
 	}
 	
 }
