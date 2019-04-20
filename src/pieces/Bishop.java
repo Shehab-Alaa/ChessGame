@@ -9,6 +9,7 @@ public class Bishop extends ChessPiece implements DiagonalMovement{
 
 	public Bishop(Position currentPosition, String color) {
 		super(currentPosition, color);
+		pieceValue = 3;
 	}
 
 	@Override

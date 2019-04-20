@@ -15,6 +15,7 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 
 	public King(Position currentPosition, String color) {
 		super(currentPosition, color);
+		pieceValue = 9;
 	}
 	@Override
 	public ArrayList<Position> getValidMoves() {

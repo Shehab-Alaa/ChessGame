@@ -9,6 +9,7 @@ public class Knight extends ChessPiece implements LMovement {
 
 	public Knight(Position currentPosition, String color) {
 		super(currentPosition, color);
+		pieceValue = 3;
 	}
 
 	@Override

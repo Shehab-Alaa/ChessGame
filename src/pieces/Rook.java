@@ -13,6 +13,7 @@ public class Rook extends ChessPiece implements ForwardMovement , BackwardMoveme
 
 	public Rook(Position currentPosition, String color) {
 		super(currentPosition, color);
+		pieceValue = 5;
 	}
 	
 	@Override

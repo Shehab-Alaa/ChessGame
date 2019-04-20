@@ -13,6 +13,7 @@ public class Queen extends ChessPiece implements ForwardMovement , BackwardMovem
 
 	public Queen(Position currentPosition, String color) {
 		super(currentPosition, color);
+		pieceValue = 7;
 	}
 	
 

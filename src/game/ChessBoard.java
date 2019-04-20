@@ -161,34 +161,40 @@ public class ChessBoard extends JFrame{
 		}
 		return null;
 	}
+
 	
-	public static ArrayList<Position> getValidPositions(ChessPiece chessPiece)
-	{
-		ArrayList<Position> validPositions = chessPiece.getValidMoves();
+	public static ArrayList<Position> getValidPositions(ChessPiece chessPiece){
 		currentPiece = chessPiece;
-		
-		if (chessPiece instanceof Pawn)
-			filterPawnMovements(validPositions);
-		
-		else if (chessPiece instanceof Bishop)
-			filterBishopMovements(validPositions);
-		
-		else if (chessPiece instanceof Rook)
-			filterRookMovements(validPositions);
-		
-		else if (chessPiece instanceof Knight)
-			filterKnightMovements(validPositions);
-		
-		else if (chessPiece instanceof Queen)
-			filterQueenMovements(validPositions);
-		
-		else if (chessPiece instanceof King)
-			filterKingMovements(validPositions);
-		
-		//return checkKingProtection(validPositions);
-		return validPositions;
+		ArrayList<Position> validPositions = filter(chessPiece);
+		return checkKingProtection(validPositions);
 	}
-	
+
+
+     public static ArrayList<Position> filter(ChessPiece chessPiece) {
+		 ArrayList<Position> validPositions = chessPiece.getValidMoves();
+		        if (chessPiece instanceof Pawn)
+			    	filterPawnMovements(validPositions);
+				
+				else if (chessPiece instanceof Bishop)
+					filterBishopMovements(validPositions);
+				
+				else if (chessPiece instanceof Rook)
+					filterRookMovements(validPositions);
+				
+				else if (chessPiece instanceof Knight)
+					filterKnightMovements(validPositions);
+				
+				else if (chessPiece instanceof Queen)
+					filterQueenMovements(validPositions);
+				
+				else if (chessPiece instanceof King)
+					filterKingMovements(validPositions);		
+				
+				return validPositions;
+			
+	 }
+
+
 	private static void filterKingMovements(ArrayList<Position> validPositions) {
 		ArrayList<Position> validPosition;
 		ChessPiece holder=currentPiece;
@@ -244,7 +250,7 @@ public class ChessBoard extends JFrame{
 				
 					ChessPiece king = ChessBoard.getKingPiece(currentPiece.getPieceColor());
 					currentPiece.setCurrentPosition(position); 
-					enemyValidPositions = getValidPositions(chessPieces.get(i));
+					enemyValidPositions = filter(chessPieces.get(i));
 					for(int j=0;j<enemyValidPositions.size();j++) {
 						//System.out.println(position.getColumn()+" "+position.getRow());
 						if(enemyValidPositions.get(j).getRow()==king.getCurrentPosition().getRow()&&enemyValidPositions.get(j).getColumn()==king.getCurrentPosition().getColumn()){
@@ -266,11 +272,10 @@ public class ChessBoard extends JFrame{
 			  i++;		  
 	  }
 	  return validPositions;
-	  
-	  
+	   
  }
   
-  protected static boolean checkmate(String piececolor) {return getValidPositions(ChessBoard.getoppositeKingPiece(piececolor)).isEmpty();}
+    protected static boolean checkmate(String piececolor) {return getValidPositions(ChessBoard.getoppositeKingPiece(piececolor)).isEmpty();}
   
     
 
@@ -508,6 +513,8 @@ public class ChessBoard extends JFrame{
 			{
 				if (chessPieces.get(i).getCurrentPosition().getRow() == validPositions.get(j).getRow() && chessPieces.get(i).getCurrentPosition().getColumn() == validPositions.get(j).getColumn())
 				{
+					if (chessPieces.get(i).getPieceColor().equals(currentPiece.getPieceColor()))
+						validPositions.remove(j);
 					//northweast
 					if(currentPiece.getCurrentPosition().getRow() - chessPieces.get(i).getCurrentPosition().getRow() > 0 && currentPiece.getCurrentPosition().getColumn() - chessPieces.get(i).getCurrentPosition().getColumn() < 0)
 					{
@@ -561,6 +568,7 @@ public class ChessBoard extends JFrame{
 		}
 
 	}
+
 
 	private static void filterPawnMovements(ArrayList<Position> validPositions) {
 		for (ChessPiece chessPiece : chessPieces)

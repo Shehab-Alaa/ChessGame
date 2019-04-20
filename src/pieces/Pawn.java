@@ -10,6 +10,7 @@ public class Pawn extends ChessPiece implements ForwardMovement , DiagonalMoveme
 
 	public Pawn(Position currentPosition, String color) {
 		super(currentPosition, color);
+		pieceValue = 1;
 	}
 
 	@Override

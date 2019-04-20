@@ -11,6 +11,7 @@ public abstract class ChessPiece {
 	protected final String color;
 	protected boolean statue;
 	protected ArrayList<Position> validMoves;
+	protected int pieceValue;
 	
 	public ChessPiece(Position currentPosition, String color)
 	{

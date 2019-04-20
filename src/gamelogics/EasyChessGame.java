@@ -26,7 +26,14 @@ public class EasyChessGame extends ChessGameLogic{
 	{
 		for (Position position : positionsHolder)
 		{
-			squares[position.getRow()][position.getColumn()].setBorder(new LineBorder(Color.green , 3));
+			if (chessBoard.hasPieceInPositon(position))
+			{
+				  squares[position.getRow()][position.getColumn()].setBorder(new LineBorder(Color.yellow , 3));
+			}
+			else
+			{
+			  squares[position.getRow()][position.getColumn()].setBorder(new LineBorder(Color.green , 3));
+			}
 		}
 		
 	}
@@ -62,7 +69,8 @@ public class EasyChessGame extends ChessGameLogic{
 	    		  currentPiece = chessBoard.getPiece(buttonPosition);
 	    		  colorValidPositions(chessBoard.getValidPositions(currentPiece));
 	    	  }
-	 
+	    	  else removeColoredBorder();
+	    	  
 	      }
 	  
 	}
@@ -89,7 +97,12 @@ public class EasyChessGame extends ChessGameLogic{
 			{
 				if (event.getSource() == squares[i][j])
 				{
-					ChessPiece holder = chessBoard.getPiece(new Position(i,j));
+					ChessPiece holder = chessBoard.getPiece(new Position(i,j));;
+					if (currentPiece != null)
+					{
+						holder = currentPiece;
+					}
+				
 					if(squares[i][j].getIcon()==null || EasyChessGame.playTurn % 2 == 0 && holder.getPieceColor().equals("White") 
 							||EasyChessGame.playTurn % 2 == 1 && holder.getPieceColor().equals("Black"))
 						           pressedButton(new Position(i,j));
