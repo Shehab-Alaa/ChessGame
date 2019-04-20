@@ -2,6 +2,7 @@ package gamelogics;
 
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,6 +11,8 @@ import javax.swing.JPanel;
 import extra.Position;
 import game.ChessBoard;
 import pieces.ChessPiece;
+import pieces.King;
+import pieces.Knight;
 import players.Player;
 
 abstract public class ChessGameLogic implements ActionListener {
@@ -39,4 +42,6 @@ abstract public class ChessGameLogic implements ActionListener {
    }
    
 
+   
 }
+ 

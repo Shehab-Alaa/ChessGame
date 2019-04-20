@@ -20,33 +20,32 @@ public class Bishop extends ChessPiece implements DiagonalMovement{
 
 	@Override
 	public ArrayList<Position> getValidDiagonalMoves() {
-		ArrayList<Position> logicalMoves =new ArrayList<Position>();
-			for(int i=1;i<7;i++)
-			{
-					if(currentPosition.getRow()<7&&currentPosition.getColumn()<7)
-					{
-						Position p = new Position(currentPosition.getRow()+i,currentPosition.getColumn()+i);
-						logicalMoves.add(p);
-					}
-					if(currentPosition.getRow()<7&&currentPosition.getColumn()>0)
-					{
-						Position p1 = new Position(currentPosition.getRow()+i,currentPosition.getColumn()-i);
-						logicalMoves.add(p1);
-					}
-					if(currentPosition.getRow()>0&&currentPosition.getColumn()>0)
-					{
-						Position p2 = new Position(currentPosition.getRow()-i,currentPosition.getColumn()-i);
-						logicalMoves.add(p2);
-					}
-					if(currentPosition.getRow()>0&&currentPosition.getColumn()<7)
-					{
-						Position p3 = new Position(currentPosition.getRow()-i,currentPosition.getColumn()+i);
-						logicalMoves.add(p3);
-					}
-			}
+
+		ArrayList<Position> validMoves = new ArrayList<Position>();
+		for (int i=1; i<7; i++)
+		{
+			if (CheckPosition(new Position(currentPosition.getRow()+i, currentPosition.getColumn() -i)))//left down
+				validMoves.add(new Position(currentPosition.getRow()+i, currentPosition.getColumn() -i));
+			
+			if (CheckPosition(new Position(currentPosition.getRow()+i, currentPosition.getColumn() +i)))//right down
+				validMoves.add(new Position(currentPosition.getRow()+i, currentPosition.getColumn() +i));
+
+			if (CheckPosition(new Position(currentPosition.getRow()-i, currentPosition.getColumn() -i)))//left up
+				validMoves.add(new Position(currentPosition.getRow()-i, currentPosition.getColumn() -i));	
 		
-		return logicalMoves;
+			if (CheckPosition(new Position(currentPosition.getRow()-i, currentPosition.getColumn() +i)))//right up
+				validMoves.add(new Position(currentPosition.getRow()-i, currentPosition.getColumn() +i));			
+		}
+		
+		return validMoves;
+	
 	}
+	
+	private Boolean CheckPosition(Position p) {
+		
+		return (p.getRow() >= 0&& p.getColumn() >= 0  && p.getRow()<8 && p.getColumn() <8);
+	}
+
 
 }
 
