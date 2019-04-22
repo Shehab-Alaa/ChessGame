@@ -8,7 +8,7 @@ public abstract class ChessPiece {
 
 	protected Position currentPosition;
 	protected Position possiblePosition;
-	protected final String color;
+	protected String color;
 	protected boolean statue;
 	protected ArrayList<Position> validMoves;
 	protected int pieceValue;
@@ -26,6 +26,11 @@ public abstract class ChessPiece {
 	public void setCurrentPosition(Position currentPosition)
 	{
 		this.currentPosition = currentPosition;
+	}
+	
+	public void setPieceColor(String color)
+	{
+		this.color = color;
 	}
 	
 	public void makeMove()
@@ -48,6 +53,11 @@ public abstract class ChessPiece {
 		return currentPosition;
 	}
 
+	public int getPieceValue()
+	{
+		return pieceValue;
+	}
+	
 	public String getPieceColor()
 	{
 		return color;

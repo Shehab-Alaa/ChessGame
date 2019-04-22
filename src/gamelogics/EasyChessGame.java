@@ -79,6 +79,7 @@ public class EasyChessGame extends ChessGameLogic{
 	{
 		for (Position position : chessBoard.getValidPositions(currentPiece))
 		{
+			System.out.println(position.getRow() + " " + position.getColumn());
 			squares[position.getRow()][position.getColumn()].setBorder(UIManager.getBorder("Button.border"));
 		}
 	}

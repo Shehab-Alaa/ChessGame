@@ -19,6 +19,7 @@ import pieces.ChessPiece;
 import pieces.King;
 import pieces.Knight;
 import pieces.Pawn;
+import pieces.PieceFactory;
 import pieces.Queen;
 import pieces.Rook;
 
@@ -48,6 +49,109 @@ public class ChessBoard extends JFrame{
 		initBoard();
 		initialize();
 	}
+	/*
+	private void initBoard()
+	{
+		chessPieces = new ArrayList<>();
+		capturedPieces = new ArrayList<>();
+		
+		Rook rook = (Rook) PieceFactory.getRookPiece();
+		rook.setCurrentPosition(new Position(7,0));
+		rook.setPieceColor("White");
+		chessPieces.add(rook);
+		
+		Knight knight = (Knight) PieceFactory.getKnightPiece();
+		knight.setCurrentPosition(new Position(7,1));
+		knight.setPieceColor("White");
+		chessPieces.add(knight);
+		
+		Bishop bishop = (Bishop) PieceFactory.getBishopPiece();
+		bishop.setCurrentPosition(new Position(7,2));
+		bishop.setPieceColor("White");
+		chessPieces.add(bishop);
+		
+		Queen queen = (Queen) PieceFactory.getQueenPiece();
+		queen.setCurrentPosition(new Position(7,3));
+		queen.setPieceColor("White");
+		chessPieces.add(queen);
+		
+		King king = (King) PieceFactory.getKingPiece();
+		king.setCurrentPosition(new Position(7,4));
+		king.setPieceColor("White");
+		chessPieces.add(king);
+
+		bishop = (Bishop) PieceFactory.getBishopPiece();
+		bishop.setCurrentPosition(new Position(7,5));
+		bishop.setPieceColor("White");
+		chessPieces.add(bishop);
+
+		knight = (Knight) PieceFactory.getKnightPiece();
+		knight.setCurrentPosition(new Position(7,6));
+		knight.setPieceColor("White");
+		chessPieces.add(knight);
+		
+	    rook = (Rook) PieceFactory.getRookPiece();
+		rook.setCurrentPosition(new Position(7,7));
+		rook.setPieceColor("White");
+		chessPieces.add(rook);
+		
+		for(int i=0;i<8;i++)
+		{
+			Pawn pawn = (Pawn) PieceFactory.getPawnPiece();
+			pawn.setCurrentPosition(new Position(6,i));
+			pawn.setPieceColor("White");
+			Pawn holder = pawn;
+			chessPieces.add(holder);
+		}
+		
+	    rook = (Rook) PieceFactory.getRookPiece();
+		rook.setCurrentPosition(new Position(0,0));
+		rook.setPieceColor("Black");
+		chessPieces.add(rook);
+		
+		knight = (Knight) PieceFactory.getKnightPiece();
+		knight.setCurrentPosition(new Position(0,1));
+		knight.setPieceColor("Black");
+		chessPieces.add(knight);
+		
+		bishop = (Bishop) PieceFactory.getBishopPiece();
+		bishop.setCurrentPosition(new Position(0,2));
+		bishop.setPieceColor("Black");
+		chessPieces.add(bishop);
+		
+		queen = (Queen) PieceFactory.getQueenPiece();
+		queen.setCurrentPosition(new Position(0,3));
+		queen.setPieceColor("Black");
+		chessPieces.add(queen);
+		
+		king = (King) PieceFactory.getKingPiece();
+		king.setCurrentPosition(new Position(0,4));
+		king.setPieceColor("Black");
+		chessPieces.add(king);
+
+		bishop = (Bishop) PieceFactory.getBishopPiece();
+		bishop.setCurrentPosition(new Position(0,5));
+		bishop.setPieceColor("Black");
+		chessPieces.add(bishop);
+
+		knight = (Knight) PieceFactory.getKnightPiece();
+		knight.setCurrentPosition(new Position(0,6));
+		knight.setPieceColor("Black");
+		chessPieces.add(knight);
+		
+		rook = (Rook) PieceFactory.getRookPiece();
+		rook.setCurrentPosition(new Position(0,7));
+		rook.setPieceColor("Black");
+		chessPieces.add(rook);
+	
+		for(int i=0;i<8;i++)
+		{
+			Pawn pawn = (Pawn) PieceFactory.getPawnPiece();
+			pawn.setCurrentPosition(new Position(1,i));
+			pawn.setPieceColor("Black");
+			chessPieces.add(pawn);
+		}
+	}*/
 	
 	private void initBoard()
 	{
@@ -157,7 +261,7 @@ public class ChessBoard extends JFrame{
 		{
 			if (chessPiece.getCurrentPosition().getRow() == position.getRow() && 
 					chessPiece.getCurrentPosition().getColumn() == position.getColumn())
-				return chessPiece;
+				return chessPiece;	
 		}
 		return null;
 	}
@@ -414,7 +518,7 @@ public class ChessBoard extends JFrame{
 
 	private static void filterRookMovements(ArrayList<Position> validPositions) {
 
-		Position  currentpostion = currentPiece.getCurrentPosition();
+		Position currentpostion = currentPiece.getCurrentPosition();
 		for(ChessPiece chessPiece : chessPieces)
 		{
 			if(chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
@@ -569,120 +673,78 @@ public class ChessBoard extends JFrame{
 
 	}
 
-
 	private static void filterPawnMovements(ArrayList<Position> validPositions) {
-		for (ChessPiece chessPiece : chessPieces)
+		
+		for (int i =0;i<validPositions.size();i++)
 		{
-			if(currentPiece.getCurrentPosition().getRow()==1)
+	        if(chessBoard.hasPieceInPositon(validPositions.get(i)))
+	        {
+	        	if (chessBoard.getPiece(validPositions.get(i)).getPieceColor().equals(currentPiece.getPieceColor()))
+	        		validPositions.remove(i);
+	        }
+		}
+		
+		ArrayList<Position> deletedPositions = new ArrayList<>();
+		Position positionHolder;
+		
+		if (currentPiece.getPieceColor().equals("White"))
+		{
+			if (currentPiece.getCurrentPosition().getRow() == 6)
 			{
-				Position pp =new Position(currentPiece.getCurrentPosition().getRow()+1,currentPiece.getCurrentPosition().getColumn());
-				if(hasPieceInPositon(pp))
+				positionHolder = new Position(currentPiece.getCurrentPosition().getRow() - 2 ,currentPiece.getCurrentPosition().getColumn());
+				if (chessBoard.hasPieceInPositon(positionHolder))
+				  deletedPositions.add(positionHolder);	
+			}
+			
+			positionHolder = new Position(currentPiece.getCurrentPosition().getRow() - 1,currentPiece.getCurrentPosition().getColumn());
+			if (chessBoard .hasPieceInPositon(positionHolder))
+				deletedPositions.add(positionHolder);
+			
+			positionHolder = new Position(currentPiece.getCurrentPosition().getRow() - 1,currentPiece.getCurrentPosition().getColumn() + 1);
+			if (!chessBoard.hasPieceInPositon(positionHolder))
+				deletedPositions.add(positionHolder);
+			
+			positionHolder = new Position(currentPiece.getCurrentPosition().getRow() - 1,currentPiece.getCurrentPosition().getColumn() - 1);
+			if (!chessBoard.hasPieceInPositon(positionHolder))
+				deletedPositions.add(positionHolder);
+			
+		}
+		else if (currentPiece.getPieceColor().equals("Black"))
+		{
+			if (currentPiece.getCurrentPosition().getRow() == 1)
+			{
+				positionHolder = new Position(currentPiece.getCurrentPosition().getRow() + 2,currentPiece.getCurrentPosition().getColumn());
+				if (chessBoard.hasPieceInPositon(positionHolder))
+					deletedPositions.add(positionHolder);
+			}
+			
+			positionHolder = new Position(currentPiece.getCurrentPosition().getRow() + 1,currentPiece.getCurrentPosition().getColumn());
+			if (chessBoard.hasPieceInPositon(positionHolder))
+				deletedPositions.add(positionHolder);
+			
+			positionHolder = new Position(currentPiece.getCurrentPosition().getRow() + 1,currentPiece.getCurrentPosition().getColumn() + 1);
+			if (!chessBoard.hasPieceInPositon(positionHolder))
+				deletedPositions.add(positionHolder);
+			
+			positionHolder = new Position(currentPiece.getCurrentPosition().getRow() + 1,currentPiece.getCurrentPosition().getColumn() - 1);
+			if (!chessBoard.hasPieceInPositon(positionHolder))
+				deletedPositions.add(positionHolder);
+		}
+		
+		for (Position position : deletedPositions)
+		{
+			for (int i =0;i<validPositions.size();i++)
+			{
+				if (validPositions.get(i).getRow() == position.getRow() && validPositions.get(i).getColumn() == position.getColumn())
 				{
-					filterpawnbyIndex(pp,validPositions);
-					Position p =new Position(currentPiece.getCurrentPosition().getRow()+2,currentPiece.getCurrentPosition().getColumn());
-					filterpawnbyIndex(p,validPositions);	
-				}
-				
-			}
-			if(currentPiece.getCurrentPosition().getRow()==1)
-			{
-				Position p8 =new Position(currentPiece.getCurrentPosition().getRow()+2,currentPiece.getCurrentPosition().getColumn());
-				if(hasPieceInPositon(p8))
-				{
-					filterpawnbyIndex(p8,validPositions);	
-				}
-			}
-			if(currentPiece.getCurrentPosition().getRow()==6)
-			{
-				Position pp =new Position(currentPiece.getCurrentPosition().getRow()-1,currentPiece.getCurrentPosition().getColumn());
-				if(hasPieceInPositon(pp))
-				{
-					filterpawnbyIndex(pp,validPositions);	
-					Position p =new Position(currentPiece.getCurrentPosition().getRow()-2,currentPiece.getCurrentPosition().getColumn());
-					filterpawnbyIndex(p,validPositions);	
-				}
-			}
-			if(currentPiece.getCurrentPosition().getRow()==6)
-			{
-				Position p =new Position(currentPiece.getCurrentPosition().getRow()-2,currentPiece.getCurrentPosition().getColumn());
-				if(hasPieceInPositon(p))
-				{
-					filterpawnbyIndex(p,validPositions);	
-				}
-			}
-			Position p =new Position(currentPiece.getCurrentPosition().getRow()+1,currentPiece.getCurrentPosition().getColumn());
-			if(hasPieceInPositon(p))
-			{
-				filterpawnbyIndex(p,validPositions);	
-			}
-			Position p1=new Position(currentPiece.getCurrentPosition().getRow()+1,currentPiece.getCurrentPosition().getColumn()+1);
-			if(!hasPieceInPositon(p1))
-			{
-				filterpawnbyIndex(p1,validPositions);	
-			}
-			else
-			{
-				if(chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
-				{
-					filterpawnbyIndex(p1,validPositions);	
-				}
-			}
-			Position p2=new Position(currentPiece.getCurrentPosition().getRow()+1,currentPiece.getCurrentPosition().getColumn()-1);
-			if(!hasPieceInPositon(p2))
-			{
-				filterpawnbyIndex(p2,validPositions);	
-			}
-			else
-			{
-				if(chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
-				{
-					filterpawnbyIndex(p2,validPositions);	
-				}
-			}
-			Position p3 =new Position(currentPiece.getCurrentPosition().getRow()-1,currentPiece.getCurrentPosition().getColumn());
-			if(hasPieceInPositon(p3))
-			{
-				filterpawnbyIndex(p3,validPositions);	
-			}
-			Position p4 =new Position(currentPiece.getCurrentPosition().getRow()-1,currentPiece.getCurrentPosition().getColumn()+1);
-			if(!hasPieceInPositon(p4))
-			{
-				filterpawnbyIndex(p4,validPositions);	
-			}
-			else
-			{
-				if(chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
-				{
-					filterpawnbyIndex(p4,validPositions);	
-				}
-			}
-			Position p5 =new Position(currentPiece.getCurrentPosition().getRow()-1,currentPiece.getCurrentPosition().getColumn()-1);
-			if(!hasPieceInPositon(p5))
-			{
-				filterpawnbyIndex(p5,validPositions);	
-			}
-			else
-			{
-				if(chessPiece.getPieceColor().equals(currentPiece.getPieceColor()))
-				{
-					filterpawnbyIndex(p5,validPositions);	
+					validPositions.remove(i);
+					break;
 				}
 			}
 		}
+		
+		
 	}
-	private static void filterpawnbyIndex(Position p ,ArrayList<Position>validPositions)
-	{
-		for(int i=0;i<validPositions.size();i++)
-		{
-			if(validPositions.get(i).getRow()==p.getRow()&&validPositions.get(i).getColumn()==p.getColumn())
-			{
-				validPositions.remove(i);
-				break;
-			}
-		}
-	}
-
-
 
 
 	public static boolean hasPieceInPositon(Position position)
