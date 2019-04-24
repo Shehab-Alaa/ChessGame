@@ -10,6 +10,6 @@ public class GameLogic {
   {
 	// new HardChessGame(new Player("Shehab") , new Player("Alaa"));
      new EasyChessGame(new Player("Shehab") , new Player("Alaa"));
-	  // new EasyVsComputerGame(new Player("Shehab") , new Player("Alaa"));
+	 // new EasyVsComputerGame(new Player("Shehab") , new Player("Alaa"));
   }
 }

@@ -12,7 +12,9 @@ import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
 import extra.Position;
+import filters.KingFilterCriteria;
 import pieces.ChessPiece;
+import pieces.King;
 import players.Player;
 
 public class EasyChessGame extends ChessGameLogic{
@@ -47,6 +49,10 @@ public class EasyChessGame extends ChessGameLogic{
 	    	  {
 	    		  ChessPiece enemy = chessBoard.getPiece(buttonPosition);
 	    		  squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(null);
+	    		  /*if(enemy instanceof King)
+    			  {
+	    	    	  JOptionPane.showMessageDialog(null, "Dead");
+    			  }*/
 	    		  chessBoard.pieceCaptured(enemy);
 	    	  }	
 	    		  ImageIcon iconHolder = (ImageIcon) squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].getIcon();
@@ -54,6 +60,11 @@ public class EasyChessGame extends ChessGameLogic{
 	    	      squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(iconHolder);
 	    	      removeColoredBorder();
 	    	      currentPiece.setCurrentPosition(buttonPosition);
+	    	      /*(new KingFilterCriteria().Checkmate(new KingFilterCriteria().getOppositeKingPiece(currentPiece.getPieceColor()))){
+	    		
+	    			  //here check mate\
+	    	    	  JOptionPane.showMessageDialog(null, "Dead");
+	    	      }*/
 	    	      currentPiece = null;    	      
 	    	      playTurn++;
 	      }
@@ -79,7 +90,7 @@ public class EasyChessGame extends ChessGameLogic{
 	{
 		for (Position position : chessBoard.getValidPositions(currentPiece))
 		{
-			System.out.println(position.getRow() + " " + position.getColumn());
+			//System.out.println(position.getRow() + " " + position.getColumn());
 			squares[position.getRow()][position.getColumn()].setBorder(UIManager.getBorder("Button.border"));
 		}
 	}
