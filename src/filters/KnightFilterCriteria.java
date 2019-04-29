@@ -8,28 +8,29 @@ import pieces.ChessPiece;
 
 public class KnightFilterCriteria implements FilterCriteria{
 
+	private ChessBoard chessBoard = ChessBoard.getChessBoardInstance();
 	
 	@Override
-	public ArrayList<Position> filterPositions(ChessPiece chessPieceHolder) {
-		     ChessBoard.validPositions = chessPieceHolder.getValidMoves(); 
-			for  (ChessPiece chessPiece : ChessBoard.chessPieces)
+	public void filterPositions(ChessPiece chessPieceHolder) {
+		  
+		   chessBoard.setValidPositions(chessPieceHolder.getValidMoves());
+		     
+			for  (ChessPiece chessPiece : chessBoard.getChessPieces())
 			{
 				if (chessPieceHolder.getPieceColor().equals(chessPiece.getPieceColor()) &&
 						!chessPieceHolder.getCurrentPosition().equals(chessPiece.getCurrentPosition()))
 				{
-					for (int i =0;i<ChessBoard.validPositions.size();i++)
+					for (int i =0;i<chessBoard.getValidPositonsArray().size();i++)
 					{
-						if (ChessBoard.validPositions.get(i).getRow() == chessPiece.getCurrentPosition().getRow() &&
-								ChessBoard.validPositions.get(i).getColumn() == chessPiece.getCurrentPosition().getColumn())
+						if (chessBoard.getValidPositonsArray().get(i).getRow() == chessPiece.getCurrentPosition().getRow() &&
+								chessBoard.getValidPositonsArray().get(i).getColumn() == chessPiece.getCurrentPosition().getColumn())
 						{
-							ChessBoard.validPositions.remove(i);
+							chessBoard.getValidPositonsArray().remove(i);
 	                         break;
 						}
 					}
 				}
 			}
-
-			return ChessBoard.validPositions;
 	}
 
 }

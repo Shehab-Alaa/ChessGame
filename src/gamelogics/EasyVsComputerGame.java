@@ -25,6 +25,9 @@ public class EasyVsComputerGame extends EasyChessGame{
 		if (!squares[buttonPosition.getRow()][buttonPosition.getColumn()].getBorder().equals(new JButton().getBorder()))
 	      {
 	    	 // colored
+			if (playTurn == 0)
+				saveChessBoardState();
+			
 	    	  if(chessBoard.hasPieceInPositon(buttonPosition))
 	    	  {
 	    		  ChessPiece enemy = chessBoard.getPiece(buttonPosition);
@@ -38,6 +41,7 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    	      currentPiece.setCurrentPosition(buttonPosition);
 	    	      currentPiece = null;    	      
 	    	      playTurn++;
+	    	      saveChessBoardState();
 	    	      computerTurn();
 	      }
 	      else
@@ -72,6 +76,7 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    squares[bestPositionMove.getRow()][bestPositionMove.getColumn()].setIcon(iconHolder);
 	    bestPieceMove.setCurrentPosition(bestPositionMove);
 		playTurn++;
+		saveChessBoardState();
 	}
 	
 	private void generateBestMove()
@@ -80,7 +85,7 @@ public class EasyVsComputerGame extends EasyChessGame{
 		bestPositionMove = null;
 		bestValueMove = 0;
 	
-		for (ChessPiece chessPiece : chessBoard.chessPieces)
+		for (ChessPiece chessPiece : chessBoard.getChessPieces())
 		{
 			if (chessPiece.getPieceColor().equals("Black"))
 			{
@@ -123,7 +128,12 @@ public class EasyVsComputerGame extends EasyChessGame{
 						holder = currentPiece;
 					}
 				
-					if(squares[i][j].getIcon()==null || EasyChessGame.playTurn % 2 == 0 && holder.getPieceColor().equals("White"))
+					if (i==0 && j ==0)
+						undo();
+					else if (i==0 && j ==1)
+						redo();
+					
+					else if(squares[i][j].getIcon()==null || EasyChessGame.playTurn % 2 == 0 && holder.getPieceColor().equals("White"))
 						           pressedButton(new Position(i,j));
 				}
 			}

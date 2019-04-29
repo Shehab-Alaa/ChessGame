@@ -28,7 +28,7 @@ abstract public class ChessGameLogic implements ActionListener {
    {
 	   this.playerOne = playerOne;
 	   this.playerTwo = playerTwo;
-	   chessBoard = ChessBoard.getChessBoard();
+	   chessBoard = ChessBoard.getChessBoardInstance();
 	   currentPiece = null;
 	   playTurn = 0;
 	   squares = chessBoard.getSquares();

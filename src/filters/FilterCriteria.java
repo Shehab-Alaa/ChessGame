@@ -6,5 +6,5 @@ import extra.Position;
 import pieces.ChessPiece;
 
 public interface FilterCriteria {
-    ArrayList<Position> filterPositions(ChessPiece chessPiece);
+    void filterPositions(ChessPiece chessPiece);
 }

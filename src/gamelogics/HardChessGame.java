@@ -33,11 +33,12 @@ public class HardChessGame extends ChessGameLogic{
 				try {
 					sleep(1000);
 					seconds--;
-					System.out.println(seconds);
+					System.out.println("Seconds: " + seconds);
 					if (seconds ==0)
 					{
 						seconds = 30;
-						playTurn ++;
+						playTurn++;
+						System.out.println("Player is Turned");
 					}
 				} 
 				catch (InterruptedException e) {
@@ -84,9 +85,9 @@ public class HardChessGame extends ChessGameLogic{
 							currentImageicon=null;
 							squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
 							currentPiece.setCurrentPosition(buttonPosition);
-							if(new KingFilterCriteria().Checkmate(new KingFilterCriteria().getOppositeKingPiece(currentPiece.getPieceColor()))){
-				    			  //here check mate\
-				    	    	  System.out.println("hhh");
+							if(new KingFilterCriteria().Checkmate(new KingFilterCriteria().getOppositeKingPiece(currentPiece.getPieceColor()),currentPiece)){
+				    			  
+								//here check mate\
 				    	    	  JOptionPane.showMessageDialog(null, "Dead");
 				    	      }
 							currentPiece=null;

@@ -30,19 +30,19 @@ import pieces.Rook;
 
 public class ChessBoard extends JFrame{
 
-	public static ArrayList<Position> validPositions; 
+	private ArrayList<Position> validPositions; 
 	private static ChessBoard chessBoard;
-	public static ArrayList<ChessPiece> chessPieces;
-	private static ArrayList<ChessPiece> capturedPieces;
-	public static ChessPiece currentPiece;
+	private ArrayList<ChessPiece> chessPieces;
+	private ArrayList<ChessPiece> capturedPieces;
+	private ChessPiece currentPiece;
 	
-	public static JFrame boardFrame;
-    private static JPanel contents;
-    private static JButton[][] squares;
-	private static Color colorBlack;
-	private static Color colorWhite;
+	private JFrame boardFrame;
+    private JPanel contents;
+    private JButton[][] squares;
+	private Color colorBlack;
+	private Color colorWhite;
 	
-	public static ChessBoard getChessBoard()
+	public static ChessBoard getChessBoardInstance()
 	{
 		if (chessBoard == null)
 			chessBoard = new ChessBoard();
@@ -160,37 +160,36 @@ public class ChessBoard extends JFrame{
 	}
 	
 	
-	public static ArrayList<Position> getValidPositions(ChessPiece chessPiece){
+	public ArrayList<Position> getValidPositions(ChessPiece chessPiece){
 		currentPiece = chessPiece;
-		return new KingFilterCriteria().checkKingProtection(filter(chessPiece));
+		return new KingFilterCriteria().checkKingProtection(filter(chessPiece),currentPiece);
 	}
 
 
-    public static ArrayList<Position> filter(ChessPiece chessPiece) {
+    public ArrayList<Position> filter(ChessPiece chessPiece) {
 		        
 		        if (chessPiece instanceof Pawn) 
-		        	return new PawnFilterCriteria().filterPositions(chessPiece);
+		        	 new PawnFilterCriteria().filterPositions(chessPiece);
 				else if (chessPiece instanceof Bishop)
-		        	return new BishopFilterCriteria().filterPositions(chessPiece);
+		        	 new BishopFilterCriteria().filterPositions(chessPiece);
 				else if (chessPiece instanceof Rook)
-		        	return new RookFilterCriteria().filterPositions(chessPiece);
+		        	 new RookFilterCriteria().filterPositions(chessPiece);
 				else if (chessPiece instanceof Knight)
-		        	return new KnightFilterCriteria().filterPositions(chessPiece);
+		        	 new KnightFilterCriteria().filterPositions(chessPiece);
 				else if (chessPiece instanceof Queen)
-		        	return new QueenFilterCriteria().filterPositions(chessPiece);
+		        	 new QueenFilterCriteria().filterPositions(chessPiece);
 				else if (chessPiece instanceof King)
-		        	return new KingFilterCriteria().filterPositions(chessPiece);
+		        	 new KingFilterCriteria().filterPositions(chessPiece);
 				
-				//return validPositions;
-		        return null;
+				return validPositions;
 	 }
 
-	public static boolean hasPieceInPositon(Position position)
+	public boolean hasPieceInPositon(Position position)
 	{
 		return(getPiece(position) != null);   
 	}
 	
-	public static ChessPiece getPiece(Position position){
+	public ChessPiece getPiece(Position position){
 		for (ChessPiece chessPiece : chessPieces)
 		{
 			if (chessPiece.getCurrentPosition().getRow() == position.getRow() && 
@@ -200,19 +199,66 @@ public class ChessBoard extends JFrame{
 		return null;
 	}
 
-	public static void pieceCaptured(ChessPiece chessPiece)
+	public void pieceCaptured(ChessPiece chessPiece)
 	{
 		chessPieces.remove(chessPiece);
 		chessPiece.captured();
 		capturedPieces.add(chessPiece);
 	}
 	
-	public static void resetBoard()
+	public void rotateChessBoard()
+	{
+	
+	}
+	
+	public void resetBoard()
 	{
 		chessBoard = new ChessBoard();
 	}
 	
-	public static JButton[][] getSquares()
+	public ArrayList<ChessPiece> getChessPieces()
+	{
+		return chessPieces;
+	}
+	
+	public ArrayList<ChessPiece> getCapturedPieces()
+	{
+		return capturedPieces;
+	}
+	
+	public ChessPiece getCcurrentPiece()
+	{
+	   return currentPiece;	
+	}
+	
+	public ArrayList<Position> getValidPositonsArray()
+	{
+		return this.validPositions;
+	}
+	
+	public void setValidPositions(ArrayList<Position> validPositions)
+	{
+		this.validPositions = validPositions;
+	}
+	
+	public void setChessPieces(ArrayList<ChessPiece> chessPieces)
+	{
+		this.chessPieces = new ArrayList<>(chessPieces);
+	}
+	
+	public void setCapturedPieces(ArrayList<ChessPiece> capturedPieces)
+	{
+		this.capturedPieces = new ArrayList<>(capturedPieces);
+	}
+	
+	public void setSquares(JButton[][] squares)
+	{
+		for (int i =0;i<8;i++)
+    		for (int j=0;j<8;j++)
+    			this.squares[i][j].setIcon(squares[i][j].getIcon());
+	}
+	
+	public JButton[][] getSquares()
 	{
 		return squares;
 	}

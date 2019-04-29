@@ -11,32 +11,11 @@ import pieces.Knight;
 public class KingFilterCriteria implements FilterCriteria{
 
 	private static int counterFrind=0,counterEnemy=0;
-		
-	@Override
-	public ArrayList<Position> filterPositions(ChessPiece chessPieceHolder) {
-		counterFrind=0;
-		counterEnemy=0;
-		ChessBoard.validPositions = chessPieceHolder.getValidMoves(); 
-		//ArrayList<Position> validPosition,kingvalidPosition;
-		for (int i=0;i< ChessBoard.chessPieces.size();i++){
-			if (ChessBoard.chessPieces.get(i).getPieceColor().equals(chessPieceHolder.getPieceColor())){				
-				for(int j=0;j<ChessBoard.validPositions.size();) 
-					if(ChessBoard.validPositions.get(j).getColumn()==ChessBoard.chessPieces.get(i).getCurrentPosition().getColumn()&&ChessBoard.validPositions.get(j).getRow()==ChessBoard.chessPieces.get(i).getCurrentPosition().getRow()){
-						counterFrind++;
-						ChessBoard.validPositions.remove(j);
-				       }
-					else j++;
-				}
-			else if(!ChessBoard.chessPieces.get(i).getPieceColor().equals(chessPieceHolder.getPieceColor())) {
-				filterEnemyPositions(ChessBoard.chessPieces.get(i), chessPieceHolder, ChessBoard.validPositions);
-			}
-		}
-		return ChessBoard.validPositions;
-	}
+	private static ChessBoard chessBoard = ChessBoard.getChessBoardInstance();	
 	
 	public static ChessPiece getOppositeKingPiece(String color)
 	{
-		for (ChessPiece chessPiece : ChessBoard.chessPieces)
+		for (ChessPiece chessPiece : chessBoard.getChessPieces())
 		{
 			if (chessPiece instanceof King &&chessPiece.getPieceColor()!=color)
 				return chessPiece;
@@ -46,7 +25,7 @@ public class KingFilterCriteria implements FilterCriteria{
 			
     public static ChessPiece getKingPiece(String color)
 	{
-		for (ChessPiece chessPiece : ChessBoard.chessPieces)
+		for (ChessPiece chessPiece : chessBoard.getChessPieces())
 		{
 			if (chessPiece instanceof King &&chessPiece.getPieceColor()==color)
 				return chessPiece;
@@ -54,34 +33,36 @@ public class KingFilterCriteria implements FilterCriteria{
 		return null;
 	}
 	    
-    private static boolean filterationHelper(Position position,ArrayList<Position> bigvalidpositions,int indexofbigvalidpositions) {
+    private static boolean filterationHelper(Position position,ArrayList<Position> bigvalidpositions,int indexofbigvalidpositions,ChessPiece ChessPiece) {
 		ArrayList<Position> enemyValidPositions,currentPieceValidPositions;
-		Position current = ChessBoard.currentPiece.getCurrentPosition();
-		for(int i=0;i<ChessBoard.chessPieces.size();i++) {
+		Position current = ChessPiece.getCurrentPosition();
+		for(int i=0;i<chessBoard.getChessPieces().size();i++) {
 			
-			if(ChessBoard.chessPieces.get(i).getPieceColor()!=ChessBoard.currentPiece.getPieceColor()&&(!(ChessBoard.chessPieces.get(i) instanceof King)&&!(ChessBoard.chessPieces.get(i) instanceof Knight))) {
-				ChessBoard.currentPiece.setCurrentPosition(position); 					
-				ChessPiece king = getKingPiece(ChessBoard.currentPiece.getPieceColor());
-				currentPieceValidPositions=new ArrayList<Position>(ChessBoard.validPositions);
-					enemyValidPositions = ChessBoard.filter(ChessBoard.chessPieces.get(i));
-					ChessBoard.validPositions=currentPieceValidPositions;
+			if(chessBoard.getChessPieces().get(i).getPieceColor()!=ChessPiece.getPieceColor()&&(!(chessBoard.getChessPieces().get(i) instanceof King)&&!(chessBoard.getChessPieces().get(i) instanceof Knight))) {
+				ChessPiece.setCurrentPosition(position); 					
+				ChessPiece king = getKingPiece(ChessPiece.getPieceColor());
+				currentPieceValidPositions=new ArrayList<Position>(chessBoard.getValidPositonsArray());
+					enemyValidPositions = chessBoard.filter(chessBoard.getChessPieces().get(i));
+					
+					chessBoard.setValidPositions(new ArrayList<Position>(currentPieceValidPositions));
+					
 					for(int j=0;j<enemyValidPositions.size();j++) {
 						if(enemyValidPositions.get(j).getRow()==king.getCurrentPosition().getRow()&&enemyValidPositions.get(j).getColumn()==king.getCurrentPosition().getColumn()){
 							bigvalidpositions.remove(indexofbigvalidpositions);
-							ChessBoard.currentPiece.setCurrentPosition(current);
+							ChessPiece.setCurrentPosition(current);
 							return true;
 							}								
 				}
 				
 			}
 		}
-		ChessBoard.currentPiece.setCurrentPosition(current);
+		ChessPiece.setCurrentPosition(current);
 		return false;
 	}
 	
-    public static ArrayList<Position> checkKingProtection(ArrayList<Position> validPositions) {
+    public static ArrayList<Position> checkKingProtection(ArrayList<Position> validPositions,ChessPiece ChessPiece) {
 	  for(int i=0;i<validPositions.size();) {
-		  if(!filterationHelper(validPositions.get(i),validPositions,i)) 
+		  if(!filterationHelper(validPositions.get(i),validPositions,i, ChessPiece)) 
 			  i++;		  
 	  }
 	  return validPositions;
@@ -89,43 +70,99 @@ public class KingFilterCriteria implements FilterCriteria{
 	  
  }
   
-    public static boolean Checkmate(ChessPiece kingChessPiece){
- 		ArrayList<Position>currentPiecevalidPosition=new ArrayList<Position>(ChessBoard.validPositions);
- 		ChessBoard.validPositions = ChessBoard.filter(kingChessPiece); 
- 			
+    public static boolean Checkmate(ChessPiece kingChessPiece,ChessPiece ChessPiece){
+ 		ArrayList<Position>currentPiecevalidPosition=new ArrayList<Position>(chessBoard.getValidPositonsArray());
+ 		ArrayList<Position>ChessPiecevalidPosition=new ArrayList<Position>(chessBoard.filter(ChessPiece));
+ 		
+ 		chessBoard.setValidPositions(new ArrayList<Position>(currentPiecevalidPosition));
+
+ 		for(int i=0;i<chessBoard.getChessPieces().size();i++) {
+ 			if(chessBoard.getChessPieces().get(i).getPieceColor().equals(kingChessPiece.getPieceColor())) {
+ 				ArrayList<Position>beforprotection= new ArrayList<Position>(chessBoard.filter(chessBoard.getChessPieces().get(i)));
+
+ 		 		chessBoard.setValidPositions(new ArrayList<Position>(currentPiecevalidPosition));
+
+ 		 		int size=beforprotection.size();
+ 		 		ArrayList<Position>m= new ArrayList<Position>(new KingFilterCriteria().checkKingProtection(beforprotection,chessBoard.getChessPieces().get(i)));
+ 				
+ 		 		chessBoard.setValidPositions(new ArrayList<Position>(currentPiecevalidPosition));
+ 		 		
+ 				if(size>m.size()) {
+ 					for(int j=0;j<m.size();j++) {
+ 						for (int k=0;k<ChessPiecevalidPosition.size();k++) {
+ 							if (m.get(j).getRow() == ChessPiecevalidPosition.get(k).getRow() && m.get(j).getColumn() == ChessPiecevalidPosition.get(k).getColumn())
+ 							{
+ 								return false ;//protecting=true;
+ 								//break;
+ 							}
+ 						}
+ 						
+ 					}
+ 				}
+ 			}
+ 		}
+ 		
+ 		chessBoard.setValidPositions(chessBoard.filter(kingChessPiece));
+		chessBoard.setValidPositions(currentPiecevalidPosition);
+
  					int length= kingChessPiece.getValidMoves().size();
  					
- 		if(length!=counterFrind	 && length == counterFrind + counterEnemy) {
- 			ChessBoard.validPositions=currentPiecevalidPosition;
+ 		if(length!=counterFrind	 && length == counterFrind + counterEnemy ) {
  			return true;
  		}
  		
- 		ChessBoard.validPositions=currentPiecevalidPosition;
  		return false ;
- 		}
+    }
+
+	@Override
+	public void filterPositions(ChessPiece chessPieceHolder) {
+		counterFrind=0;
+		counterEnemy=0;
+		
+		chessBoard.setValidPositions(chessPieceHolder.getValidMoves());
+
+		for (int i=0;i< chessBoard.getChessPieces().size();i++){
+			if (chessBoard.getChessPieces().get(i).getPieceColor().equals(chessPieceHolder.getPieceColor())){	
+
+				for(int j=0;j<chessBoard.getValidPositonsArray().size();) 
+					if(chessBoard.getValidPositonsArray().get(j).getColumn()==chessBoard.getChessPieces().get(i).getCurrentPosition().getColumn()&&chessBoard.getValidPositonsArray().get(j).getRow()==chessBoard.getChessPieces().get(i).getCurrentPosition().getRow()){
+						counterFrind++;
+
+						chessBoard.getValidPositonsArray().remove(j);
+				       }
+					else j++;
+				}
+			else if(!chessBoard.getChessPieces().get(i).getPieceColor().equals(chessPieceHolder.getPieceColor())) {
+
+				filterEnemyPositions(chessBoard.getChessPieces().get(i), chessPieceHolder, chessBoard.getValidPositonsArray());
+
+			}
+		}
+	}
 
     private static void filterEnemyPositions(ChessPiece enemy,ChessPiece King,ArrayList<Position> validPositionsOfKing) {
-		ArrayList<Position> validPositionsHolder;
+    	ArrayList<Position> validPositionsHolder;
 		if(enemy instanceof King) {
 			for(int j=0;j<validPositionsOfKing.size();) {
 				double length=Math.floor((Math.sqrt((Math.pow((validPositionsOfKing.get(j).getRow()-enemy.getCurrentPosition().getRow()), 2))
 				+(Math.pow((validPositionsOfKing.get(j).getColumn()-enemy.getCurrentPosition().getColumn()), 2)))));
 				if(length==1.0)						       
 					{counterEnemy++;
-					ChessBoard.validPositions.remove(j);
+
+					chessBoard.getValidPositonsArray().remove(j);
 					}
 			    else j++;
 			}
 		}
 	else {
 
-		validPositionsHolder=ChessBoard.filter(enemy);
+		validPositionsHolder=chessBoard.filter(enemy);
 
 		for(int j=0;j< validPositionsHolder.size();j++) {				
 			for(int ii=0;ii<validPositionsOfKing.size();) { 
 
 				if(validPositionsOfKing.get(ii).getColumn()==validPositionsHolder.get(j).getColumn()&&validPositionsOfKing.get(ii).getRow()==validPositionsHolder.get(j).getRow())				
-					{if(!(enemy instanceof Knight))counterEnemy++;
+					{if(!(enemy instanceof Knight)&&!chessBoard.hasPieceInPositon(validPositionsOfKing.get(ii)))counterEnemy++;
 					validPositionsOfKing.remove(ii);																	
 					}
 				else ii++;
@@ -134,14 +171,8 @@ public class KingFilterCriteria implements FilterCriteria{
 		}
 	   }
 
-		System.out.println(ChessBoard.validPositions.size());
-		ChessBoard.validPositions = validPositionsOfKing;
+		chessBoard.setValidPositions(validPositionsOfKing);	
 	}
 	
-
-
-
-
-
 
 }
