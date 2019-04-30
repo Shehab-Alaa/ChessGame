@@ -78,4 +78,9 @@ public class Rook extends ChessPiece implements ForwardMovement , BackwardMoveme
 		
 	}
 
+	@Override
+	public ChessPiece cloneChessPiece() {
+	    return new Rook(new Position(currentPosition.getRow() , currentPosition.getColumn()), color);
+	}
+
 }

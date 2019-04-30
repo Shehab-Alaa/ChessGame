@@ -88,6 +88,11 @@ public class Pawn extends ChessPiece implements ForwardMovement , DiagonalMoveme
 		return pawnforward ;
 	}
 
+	@Override
+	public ChessPiece cloneChessPiece() {
+	    return new Pawn(new Position(currentPosition.getRow() , currentPosition.getColumn()), color);
+	}
+
 
 
 

@@ -2,14 +2,12 @@ package filters;
 
 import java.util.ArrayList;
 
+import board.ChessBoard;
 import extra.Position;
-import game.ChessBoard;
 import pieces.ChessPiece;
 import pieces.Queen;
 
 public class RookFilterCriteria implements FilterCriteria {
-
-	private ChessBoard chessBoard = ChessBoard.getChessBoardInstance();
 	
 	@Override
 	public void filterPositions(ChessPiece chessPieceHolder) {

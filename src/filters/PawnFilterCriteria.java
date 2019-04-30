@@ -2,13 +2,11 @@ package filters;
 
 import java.util.ArrayList;
 
+import board.ChessBoard;
 import extra.Position;
-import game.ChessBoard;
 import pieces.ChessPiece;
 
 public class PawnFilterCriteria implements FilterCriteria{
-
-	private ChessBoard chessBoard = ChessBoard.getChessBoardInstance();
 	
 	@Override
 	public void filterPositions(ChessPiece chessPieceHolder) {
@@ -26,15 +24,13 @@ public class PawnFilterCriteria implements FilterCriteria{
 		
 		ArrayList<Position> deletedPositions = new ArrayList<>();
 		Position positionHolder;
-		
-		deletedPositions.add(chessPieceHolder.getCurrentPosition());
-		
+				
 		if (chessPieceHolder.getPieceColor().equals("White"))
 		{
 			if (chessPieceHolder.getCurrentPosition().getRow() == 6)
 			{
 				positionHolder = new Position(chessPieceHolder.getCurrentPosition().getRow() - 2 ,chessPieceHolder.getCurrentPosition().getColumn());
-				if (chessBoard.hasPieceInPositon(positionHolder))
+				if (chessBoard.hasPieceInPositon(positionHolder) || chessBoard.hasPieceInPositon(new Position(chessPieceHolder.getCurrentPosition().getRow() - 1,chessPieceHolder.getCurrentPosition().getColumn())))
 				  deletedPositions.add(positionHolder);	
 			}
 			
@@ -57,7 +53,7 @@ public class PawnFilterCriteria implements FilterCriteria{
 			if (chessPieceHolder.getCurrentPosition().getRow() == 1)
 			{
 				positionHolder = new Position(chessPieceHolder.getCurrentPosition().getRow() + 2,chessPieceHolder.getCurrentPosition().getColumn());
-				if (chessBoard.hasPieceInPositon(positionHolder))
+				if (chessBoard.hasPieceInPositon(positionHolder) || chessBoard.hasPieceInPositon(new Position(chessPieceHolder.getCurrentPosition().getRow() + 1,chessPieceHolder.getCurrentPosition().getColumn())))
 					deletedPositions.add(positionHolder);
 			}
 			

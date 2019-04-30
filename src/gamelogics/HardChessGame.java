@@ -6,19 +6,19 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
+import board.ChessBoard;
 import extra.Position;
 import filters.KingFilterCriteria;
-import game.ChessBoard;
 import pieces.ChessPiece;
 import players.Player;
 
 public class HardChessGame extends ChessGameLogic{
-
-	private static boolean checkfirst;
+	private boolean checkfirst;
 	private ArrayList<Position>validmoves;
 	private ImageIcon currentImageicon;
-	private static int seconds ;
+	private int seconds ;
 	private Thread timer;
+	
 	public HardChessGame(Player playerOne, Player playerTwo) {
 		super(playerOne, playerTwo);
 		checkfirst=true;
@@ -50,7 +50,7 @@ public class HardChessGame extends ChessGameLogic{
 		timer.start();
     }
 
-	private void pressedButton(Position buttonPosition,ChessPiece piece)
+	private void gameLogic(Position buttonPosition,ChessPiece piece)
 	{
 		if(checkfirst)
 		{
@@ -67,7 +67,7 @@ public class HardChessGame extends ChessGameLogic{
 			checkfirst = true;
 			if (piece != null && piece.getPieceColor().equals(currentPiece.getPieceColor()))
 			{
-				pressedButton(buttonPosition, piece);
+				gameLogic(buttonPosition, piece);
 			}			
 			
 			else 
@@ -109,10 +109,10 @@ public class HardChessGame extends ChessGameLogic{
 				if (event.getSource() == squares[i][j])
 				{
 					ChessPiece holder = chessBoard.getPiece(new Position(i,j));
-					if(holder != null && EasyChessGame.playTurn % 2 == 0 && holder.getPieceColor().equals("White") 
-							||holder != null && EasyChessGame.playTurn % 2 == 1 && holder.getPieceColor().equals("Black")
+					if(holder != null && playTurn % 2 == 0 && holder.getPieceColor().equals("White") 
+							||holder != null && playTurn % 2 == 1 && holder.getPieceColor().equals("Black")
 							||checkfirst == false )
-						 pressedButton(new Position(i,j),holder);
+						 gameLogic(new Position(i,j),holder);
 				}
 			}
 		}

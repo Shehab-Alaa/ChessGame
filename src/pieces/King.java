@@ -87,5 +87,10 @@ public class King extends ChessPiece implements ForwardMovement , BackwardMoveme
 		if(check(currentPosition.getRow()+i,currentPosition.getColumn()+j))
 			movesHolder.add(new Position(currentPosition.getRow()+i, currentPosition.getColumn()+j));
 	}
+
+	@Override
+	public ChessPiece cloneChessPiece() {
+	    return new King(new Position(currentPosition.getRow() , currentPosition.getColumn()), color);
+	}
 	
 }

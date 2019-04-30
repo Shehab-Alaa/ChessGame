@@ -36,4 +36,9 @@ public class Knight extends ChessPiece implements LMovement {
 	       
 		return validMoves;
 	}
+
+	@Override
+	public ChessPiece cloneChessPiece() {
+	    return new Knight(new Position(currentPosition.getRow() , currentPosition.getColumn()), color);
+	}
 }

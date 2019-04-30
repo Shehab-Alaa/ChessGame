@@ -1,4 +1,4 @@
-package game;
+package board;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -120,7 +120,6 @@ public class ChessBoard extends JFrame{
 			}
 		}
 		
-
 		squares[7][0].setIcon(new ImageIcon(getClass().getResource("/assets/white_rook.png")));
 		squares[7][1].setIcon(new ImageIcon(getClass().getResource("/assets/white_knight.png")));
 		squares[7][2].setIcon(new ImageIcon(getClass().getResource("/assets/white_bishop.png")));

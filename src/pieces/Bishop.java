@@ -47,6 +47,11 @@ public class Bishop extends ChessPiece implements DiagonalMovement{
 		return (p.getRow() >= 0&& p.getColumn() >= 0  && p.getRow()<8 && p.getColumn() <8);
 	}
 
+	@Override
+	public ChessPiece cloneChessPiece() {
+	    return new Bishop(new Position(currentPosition.getRow() , currentPosition.getColumn()), color);
+	}
+
 
 }
 

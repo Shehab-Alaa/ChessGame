@@ -8,8 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import board.ChessBoard;
 import extra.Position;
-import game.ChessBoard;
 import pieces.ChessPiece;
 import pieces.King;
 import pieces.Knight;
@@ -19,9 +19,9 @@ abstract public class ChessGameLogic implements ActionListener {
    protected Player playerOne;
    protected Player playerTwo;
    protected static ChessBoard chessBoard;
-   public static int playTurn; // even for White , odd for Black
-   protected static ChessPiece currentPiece;
-   protected static JButton squares[][];
+   protected int playTurn; // even for White , odd for Black
+   protected ChessPiece currentPiece;
+   protected JButton squares[][];
    	
    
    public ChessGameLogic(Player playerOne,Player playerTwo)
@@ -41,7 +41,6 @@ abstract public class ChessGameLogic implements ActionListener {
 		}
    }
    
-
    
 }
  

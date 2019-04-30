@@ -2,18 +2,20 @@ package filters;
 
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+
+import board.ChessBoard;
 import extra.Position;
-import game.ChessBoard;
 import pieces.ChessPiece;
 import pieces.King;
 import pieces.Knight;
+import pieces.Rook;
 
 public class KingFilterCriteria implements FilterCriteria{
 
-	private static int counterFrind=0,counterEnemy=0;
-	private static ChessBoard chessBoard = ChessBoard.getChessBoardInstance();	
+	private int counterFrind=0,counterEnemy=0;
 	
-	public static ChessPiece getOppositeKingPiece(String color)
+	public ChessPiece getOppositeKingPiece(String color)
 	{
 		for (ChessPiece chessPiece : chessBoard.getChessPieces())
 		{
@@ -23,7 +25,7 @@ public class KingFilterCriteria implements FilterCriteria{
 		return null;
 	}
 			
-    public static ChessPiece getKingPiece(String color)
+    public ChessPiece getKingPiece(String color)
 	{
 		for (ChessPiece chessPiece : chessBoard.getChessPieces())
 		{
@@ -33,7 +35,7 @@ public class KingFilterCriteria implements FilterCriteria{
 		return null;
 	}
 	    
-    private static boolean filterationHelper(Position position,ArrayList<Position> bigvalidpositions,int indexofbigvalidpositions,ChessPiece ChessPiece) {
+    private boolean filterationHelper(Position position,ArrayList<Position> bigvalidpositions,int indexofbigvalidpositions,ChessPiece ChessPiece) {
 		ArrayList<Position> enemyValidPositions,currentPieceValidPositions;
 		Position current = ChessPiece.getCurrentPosition();
 		for(int i=0;i<chessBoard.getChessPieces().size();i++) {
@@ -60,17 +62,15 @@ public class KingFilterCriteria implements FilterCriteria{
 		return false;
 	}
 	
-    public static ArrayList<Position> checkKingProtection(ArrayList<Position> validPositions,ChessPiece ChessPiece) {
+    public ArrayList<Position> checkKingProtection(ArrayList<Position> validPositions,ChessPiece ChessPiece) {
 	  for(int i=0;i<validPositions.size();) {
 		  if(!filterationHelper(validPositions.get(i),validPositions,i, ChessPiece)) 
 			  i++;		  
 	  }
-	  return validPositions;
-	  
-	  
- }
+	    return validPositions; 
+      }
   
-    public static boolean Checkmate(ChessPiece kingChessPiece,ChessPiece ChessPiece){
+    public boolean Checkmate(ChessPiece kingChessPiece,ChessPiece ChessPiece){
  		ArrayList<Position>currentPiecevalidPosition=new ArrayList<Position>(chessBoard.getValidPositonsArray());
  		ArrayList<Position>ChessPiecevalidPosition=new ArrayList<Position>(chessBoard.filter(ChessPiece));
  		
@@ -133,28 +133,39 @@ public class KingFilterCriteria implements FilterCriteria{
 					else j++;
 				}
 			else if(!chessBoard.getChessPieces().get(i).getPieceColor().equals(chessPieceHolder.getPieceColor())) {
-
 				filterEnemyPositions(chessBoard.getChessPieces().get(i), chessPieceHolder, chessBoard.getValidPositonsArray());
-
+			}
+		}
+		if(!chessPieceHolder.isFirstMove() && chessBoard.getCcurrentPiece() instanceof King) {
+			start:for(ChessPiece rook: chessBoard.getChessPieces()) {
+				if(rook instanceof Rook &&!rook.isFirstMove()&&rook.getPieceColor()==chessPieceHolder.getPieceColor()) {
+						for(int i=Math.min(rook.getCurrentPosition().getColumn(),chessPieceHolder.getCurrentPosition().getColumn())+1;i<Math.max(rook.getCurrentPosition().getColumn(),chessPieceHolder.getCurrentPosition().getColumn());i++)
+							if(chessBoard.hasPieceInPositon(new Position(chessPieceHolder.getCurrentPosition().getRow(),i) ))
+								break start;
+						if(chessPieceHolder.getCurrentPosition().getColumn()>rook.getCurrentPosition().getColumn()) 
+							chessBoard.getValidPositonsArray().add(new Position(chessPieceHolder.getCurrentPosition().getRow(),chessPieceHolder.getCurrentPosition().getColumn()-2));								
+						else chessBoard.getValidPositonsArray().add(new Position(chessPieceHolder.getCurrentPosition().getRow(),chessPieceHolder.getCurrentPosition().getColumn()+2));
+					
+						}			
 			}
 		}
 	}
-
-    private static void filterEnemyPositions(ChessPiece enemy,ChessPiece King,ArrayList<Position> validPositionsOfKing) {
+	
+    private void filterEnemyPositions(ChessPiece enemy,ChessPiece King,ArrayList<Position> validPositionsOfKing) {
     	ArrayList<Position> validPositionsHolder;
 		if(enemy instanceof King) {
 			for(int j=0;j<validPositionsOfKing.size();) {
 				double length=Math.floor((Math.sqrt((Math.pow((validPositionsOfKing.get(j).getRow()-enemy.getCurrentPosition().getRow()), 2))
 				+(Math.pow((validPositionsOfKing.get(j).getColumn()-enemy.getCurrentPosition().getColumn()), 2)))));
 				if(length==1.0)						       
-					{counterEnemy++;
-
+				{
+					counterEnemy++;
 					chessBoard.getValidPositonsArray().remove(j);
-					}
+				}
 			    else j++;
 			}
 		}
-	else {
+	    else {
 
 		validPositionsHolder=chessBoard.filter(enemy);
 
@@ -166,13 +177,36 @@ public class KingFilterCriteria implements FilterCriteria{
 					validPositionsOfKing.remove(ii);																	
 					}
 				else ii++;
-		 }	
-			
+		 }		
 		}
 	   }
-
 		chessBoard.setValidPositions(validPositionsOfKing);	
 	}
 	
+    private void assignNewPosition(ChessPiece kingPiece,ChessPiece rook,int column,int i) {
+    	ImageIcon iconHolder = (ImageIcon)  chessBoard.getSquares()[rook.getCurrentPosition().getRow()][rook.getCurrentPosition().getColumn()].getIcon();
+		  chessBoard.getSquares()[rook.getCurrentPosition().getRow()][rook.getCurrentPosition().getColumn()].setIcon(null);
+		  chessBoard.getSquares()[kingPiece.getCurrentPosition().getRow()][column+i].setIcon(iconHolder);
+		rook.setCurrentPosition(new Position(kingPiece.getCurrentPosition().getRow(),column+i));
+    }
+    
+    public void Castling(ChessPiece kingPiece,int column) {
+    	ChessPiece rook;
+    	if(Math.abs(kingPiece.getCurrentPosition().getColumn()-column)==2) {
+    		if(kingPiece.getCurrentPosition().getColumn()>column) {
+   		        rook = chessBoard.getPiece(new Position(kingPiece.getCurrentPosition().getRow(),0));
+    		    assignNewPosition(kingPiece,rook,column,1);
+    		}
+    		else {  
+    		  rook = chessBoard.getPiece(new Position(kingPiece.getCurrentPosition().getRow(),7));
+		      assignNewPosition(kingPiece,rook,column,-1);
+		
+		    }
+			  rook.setFirstMove(true);
+    	}
+    }
 
+
+
+    
 }

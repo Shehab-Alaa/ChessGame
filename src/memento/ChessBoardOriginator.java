@@ -1,4 +1,4 @@
-package undo;
+package memento;
 
 
 public class ChessBoardOriginator {
