@@ -25,7 +25,6 @@ public class EasyChessGame extends ChessGameLogic{
 
 	private ChessBoardOriginator chessBoardOriginator;
 	private ChessBoardCareTaker chessBoardCareTaker;
-	protected KingFilterCriteria kingFilterCriteria;
 	
 	public EasyChessGame(Player playerOne, Player playerTwo) {
 		super(playerOne, playerTwo);

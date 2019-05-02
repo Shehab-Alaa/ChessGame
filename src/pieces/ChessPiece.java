@@ -5,10 +5,9 @@ import java.util.ArrayList;
 import extra.Position;
 
 public abstract class ChessPiece implements ChessPieceCloneable{
+	
 	protected Position currentPosition;
-	protected Position possiblePosition;
 	protected String color;
-	protected boolean statue;
 	protected ArrayList<Position> validMoves;
 	protected int pieceValue;
 	protected boolean firstMove;
@@ -17,7 +16,6 @@ public abstract class ChessPiece implements ChessPieceCloneable{
 	{
 		this.currentPosition = currentPosition;
 		this.color = color;
-		statue = true;
 		validMoves = new ArrayList<>();
 		firstMove = false;
 	}
@@ -33,22 +31,7 @@ public abstract class ChessPiece implements ChessPieceCloneable{
 	{
 		this.color = color;
 	}
-	
-	public void makeMove()
-	{
 		
-	}
-	
-	public void capture()
-	{
-		
-	}
-	
-	public void captured()
-	{
-		statue = false;
-	}
-	
 	public Position getCurrentPosition()
 	{
 		return currentPosition;

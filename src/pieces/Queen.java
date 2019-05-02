@@ -4,15 +4,22 @@ import java.util.ArrayList;
 
 import extra.Position;
 import movements.BackwardMovement;
+import movements.BishopMovements;
 import movements.DiagonalMovement;
 import movements.ForwardMovement;
 import movements.LeftSideMovement;
 import movements.RightSideMovement;
+import movements.RookMovements;
 
 public class Queen extends ChessPiece implements ForwardMovement , BackwardMovement , RightSideMovement , LeftSideMovement , DiagonalMovement {
 
+	private BishopMovements bishopMovements;
+	private RookMovements rookMovements;
+	
 	public Queen(Position currentPosition, String color) {
 		super(currentPosition, color);
+		bishopMovements = new BishopMovements();
+		rookMovements = new RookMovements();
 		pieceValue = 7;
 	}
 	
@@ -31,71 +38,33 @@ public class Queen extends ChessPiece implements ForwardMovement , BackwardMovem
 
 	@Override
 	public ArrayList<Position> getValidDiagonalMoves() {
-		ArrayList<Position> validMoves = new ArrayList<Position>();
-		for (int i=1; i<=8; i++)
-		{
-			//northwest
-			if (checkPosition(new Position(currentPosition.getRow()-i, currentPosition.getColumn() -i)))
-				validMoves.add(new Position(currentPosition.getRow()-i, currentPosition.getColumn() -i));
-			
-			//northeast
-			if (checkPosition(new Position(currentPosition.getRow()-i, currentPosition.getColumn() +i)))
-				validMoves.add(new Position(currentPosition.getRow()-i, currentPosition.getColumn() +i));
-			
-			//southwest
-			if (checkPosition(new Position(currentPosition.getRow()+i, currentPosition.getColumn() -i)))
-				validMoves.add(new Position(currentPosition.getRow()+i, currentPosition.getColumn() -i));
-			
-			//southeast
-			if (checkPosition(new Position(currentPosition.getRow()+i, currentPosition.getColumn() +i)))
-				validMoves.add(new Position(currentPosition.getRow()+i, currentPosition.getColumn() +i));
-		}
-		
-		return validMoves;
-	
+		bishopMovements.setCurrentPosition(currentPosition);
+	   return bishopMovements.getValidDiagonalMoves();
 	}
-
 
 	@Override
 	public ArrayList<Position> getValidLeftMoves() {
-		ArrayList<Position> validMoves = new ArrayList<Position>();
-		for (int i=0; i<currentPosition.getColumn(); i++)
-			validMoves.add(new Position(currentPosition.getRow(),i));
-		return validMoves;
+		 rookMovements.setCurrentPosition(currentPosition);
+		return rookMovements.getValidLeftMoves();
 	}
-
 
 	@Override
 	public ArrayList<Position> getValidRightMoves() {
-		ArrayList<Position> validMoves = new ArrayList<Position>();
-		for (int i= currentPosition.getColumn()+1; i<=7; i++)
-			validMoves.add(new Position(currentPosition.getRow(),i));
-		return validMoves;
+		 rookMovements.setCurrentPosition(currentPosition);
+		return rookMovements.getValidRightMoves();
 	}
-
 
 	@Override
 	public ArrayList<Position> getValidBackwardMoves() {
-		ArrayList<Position> validMoves = new ArrayList<Position>();
-		for (int i=currentPosition.getRow()+1; i<=7; i++)
-			validMoves.add(new Position(i, currentPosition.getColumn()));
-		return validMoves;
+		rookMovements.setCurrentPosition(currentPosition);
+       return rookMovements.getValidBackwardMoves();
 	}
-
 
 	@Override
 	public ArrayList<Position> getValidForwardMoves() {
-		ArrayList<Position> validMoves = new ArrayList<Position>();
-		for (int i=0; i<currentPosition.getRow(); i++)
-			validMoves.add(new Position(i, currentPosition.getColumn()));
-		return validMoves;
+		rookMovements.setCurrentPosition(currentPosition);
+	   return rookMovements.getValidForwardMoves();
 	}
-
-	private Boolean checkPosition(Position p) {
-		
-		return (p.getRow() >= 0 && p.getRow()<8 && p.getColumn() >= 0 && p.getColumn() <8);
-	}
-
 
 	@Override
 	public ChessPiece cloneChessPiece() {

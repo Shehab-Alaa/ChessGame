@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import extra.Position;
 import filters.BishopFilterCriteria;
+import filters.FiltersHelper;
 import filters.KingFilterCriteria;
 import filters.KnightFilterCriteria;
 import filters.PawnFilterCriteria;
@@ -36,6 +37,8 @@ public class ChessBoard extends JFrame{
 	private ArrayList<ChessPiece> capturedPieces;
 	private ChessPiece currentPiece;
 	
+	private FiltersHelper filtersHelper;
+	
 	private JFrame boardFrame;
     private JPanel contents;
     private JButton[][] squares;
@@ -53,7 +56,7 @@ public class ChessBoard extends JFrame{
 	private ChessBoard()
 	{
 		initBoard();
-		initialize();
+		initializeUI();
 	}
 	
 	private void initBoard()
@@ -61,6 +64,8 @@ public class ChessBoard extends JFrame{
 		chessPieces = new ArrayList<>();
 		capturedPieces = new ArrayList<>();
 		validPositions=new ArrayList<Position>();
+		
+		filtersHelper = new FiltersHelper();
 
 		chessPieces.add(new Rook(new Position(7,0) , "White"));
 		chessPieces.add(new Knight(new Position(7,1) , "White"));
@@ -91,7 +96,7 @@ public class ChessBoard extends JFrame{
 		}
 	}
 	
-	private void initialize()
+	private void initializeUI()
 	{
 		squares = new JButton[8][8];
 		colorBlack = Color.black;
@@ -166,21 +171,8 @@ public class ChessBoard extends JFrame{
 
 
     public ArrayList<Position> filter(ChessPiece chessPiece) {
-		        
-		        if (chessPiece instanceof Pawn) 
-		        	 new PawnFilterCriteria().filterPositions(chessPiece);
-				else if (chessPiece instanceof Bishop)
-		        	 new BishopFilterCriteria().filterPositions(chessPiece);
-				else if (chessPiece instanceof Rook)
-		        	 new RookFilterCriteria().filterPositions(chessPiece);
-				else if (chessPiece instanceof Knight)
-		        	 new KnightFilterCriteria().filterPositions(chessPiece);
-				else if (chessPiece instanceof Queen)
-		        	 new QueenFilterCriteria().filterPositions(chessPiece);
-				else if (chessPiece instanceof King)
-		        	 new KingFilterCriteria().filterPositions(chessPiece);
-				
-				return validPositions;
+		filtersHelper.filterPositions(chessPiece);        
+		return validPositions;
 	 }
 
 	public boolean hasPieceInPositon(Position position)
@@ -201,7 +193,6 @@ public class ChessBoard extends JFrame{
 	public void pieceCaptured(ChessPiece chessPiece)
 	{
 		chessPieces.remove(chessPiece);
-		chessPiece.captured();
 		capturedPieces.add(chessPiece);
 	}
 	

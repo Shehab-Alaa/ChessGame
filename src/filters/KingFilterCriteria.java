@@ -13,7 +13,7 @@ import pieces.Rook;
 
 public class KingFilterCriteria implements FilterCriteria{
 
-	private int counterFrind=0,counterEnemy=0;
+	private int friendCounter=0,enemyCounter=0;
 	
 	public ChessPiece getOppositeKingPiece(String color)
 	{
@@ -92,8 +92,7 @@ public class KingFilterCriteria implements FilterCriteria{
  						for (int k=0;k<ChessPiecevalidPosition.size();k++) {
  							if (m.get(j).getRow() == ChessPiecevalidPosition.get(k).getRow() && m.get(j).getColumn() == ChessPiecevalidPosition.get(k).getColumn())
  							{
- 								return false ;//protecting=true;
- 								//break;
+ 								return false ;
  							}
  						}
  						
@@ -107,7 +106,7 @@ public class KingFilterCriteria implements FilterCriteria{
 
  					int length= kingChessPiece.getValidMoves().size();
  					
- 		if(length!=counterFrind	 && length == counterFrind + counterEnemy ) {
+ 		if(length!=friendCounter	 && length == friendCounter + enemyCounter ) {
  			return true;
  		}
  		
@@ -116,8 +115,8 @@ public class KingFilterCriteria implements FilterCriteria{
 
 	@Override
 	public void filterPositions(ChessPiece chessPieceHolder) {
-		counterFrind=0;
-		counterEnemy=0;
+		friendCounter=0;
+		enemyCounter=0;
 		
 		chessBoard.setValidPositions(chessPieceHolder.getValidMoves());
 
@@ -126,7 +125,7 @@ public class KingFilterCriteria implements FilterCriteria{
 
 				for(int j=0;j<chessBoard.getValidPositonsArray().size();) 
 					if(chessBoard.getValidPositonsArray().get(j).getColumn()==chessBoard.getChessPieces().get(i).getCurrentPosition().getColumn()&&chessBoard.getValidPositonsArray().get(j).getRow()==chessBoard.getChessPieces().get(i).getCurrentPosition().getRow()){
-						counterFrind++;
+						friendCounter++;
 
 						chessBoard.getValidPositonsArray().remove(j);
 				       }
@@ -159,7 +158,7 @@ public class KingFilterCriteria implements FilterCriteria{
 				+(Math.pow((validPositionsOfKing.get(j).getColumn()-enemy.getCurrentPosition().getColumn()), 2)))));
 				if(length==1.0)						       
 				{
-					counterEnemy++;
+					enemyCounter++;
 					chessBoard.getValidPositonsArray().remove(j);
 				}
 			    else j++;
@@ -173,7 +172,7 @@ public class KingFilterCriteria implements FilterCriteria{
 			for(int ii=0;ii<validPositionsOfKing.size();) { 
 
 				if(validPositionsOfKing.get(ii).getColumn()==validPositionsHolder.get(j).getColumn()&&validPositionsOfKing.get(ii).getRow()==validPositionsHolder.get(j).getRow())				
-					{if(!(enemy instanceof Knight)&&!chessBoard.hasPieceInPositon(validPositionsOfKing.get(ii)))counterEnemy++;
+					{if(!(enemy instanceof Knight)&&!chessBoard.hasPieceInPositon(validPositionsOfKing.get(ii)))enemyCounter++;
 					validPositionsOfKing.remove(ii);																	
 					}
 				else ii++;

@@ -8,11 +8,15 @@ import movements.BackwardMovement;
 import movements.ForwardMovement;
 import movements.LeftSideMovement;
 import movements.RightSideMovement;
+import movements.RookMovements;
 
 public class Rook extends ChessPiece implements ForwardMovement , BackwardMovement , RightSideMovement , LeftSideMovement{
 
+	private RookMovements rookMovements;
+	
 	public Rook(Position currentPosition, String color) {
 		super(currentPosition, color);
+		rookMovements = new RookMovements();
 		pieceValue = 5;
 	}
 	
@@ -29,53 +33,26 @@ public class Rook extends ChessPiece implements ForwardMovement , BackwardMoveme
 
 	@Override
 	public ArrayList<Position> getValidLeftMoves() {
-		ArrayList<Position>moveLeft = new ArrayList<Position>();
-		for(int i=currentPosition.getColumn()-1;i>=0;i--)
-		{
-			Position a = new Position(currentPosition.getRow(),i);
-			moveLeft.add(a);
-		}
-		
-		return moveLeft;
+		 rookMovements.setCurrentPosition(currentPosition);
+		return rookMovements.getValidLeftMoves();
 	}
 
 	@Override
 	public ArrayList<Position> getValidRightMoves() {
-		
-        ArrayList<Position>moveRight = new ArrayList<Position>();
-		for(int i=currentPosition.getColumn()+1;i<8;i++)
-		{
-			Position a = new Position(currentPosition.getRow(),i);
-			moveRight.add(a);
-		}
-		return moveRight;
-		
+		 rookMovements.setCurrentPosition(currentPosition);
+		return rookMovements.getValidRightMoves();
 	}
 
 	@Override
 	public ArrayList<Position> getValidBackwardMoves() {
-        ArrayList<Position>moveBackward = new ArrayList<Position>();
-		
-		for(int i=currentPosition.getRow()+1;i<8;i++)
-		{
-			Position a = new Position(i,currentPosition.getColumn());
-			moveBackward.add(a);
-		}
-		return moveBackward ;
-		
+		rookMovements.setCurrentPosition(currentPosition);
+       return rookMovements.getValidBackwardMoves();
 	}
 
 	@Override
 	public ArrayList<Position> getValidForwardMoves() {
-		
-        ArrayList<Position>moveForward = new ArrayList<Position>();
-		for(int i=currentPosition.getRow()-1;i>=0;i--)
-		{
-			Position a = new Position(i,currentPosition.getColumn());
-			moveForward.add(a);
-		}
-		return moveForward ;
-		
+		rookMovements.setCurrentPosition(currentPosition);
+	   return rookMovements.getValidForwardMoves();
 	}
 
 	@Override

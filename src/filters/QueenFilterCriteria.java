@@ -8,10 +8,13 @@ import pieces.ChessPiece;
 
 public class QueenFilterCriteria implements FilterCriteria{
 	
+	private BishopFilterCriteria bishopFilterCriteria = new BishopFilterCriteria();
+	private RookFilterCriteria rookFilterCriteria = new RookFilterCriteria();
+	
 	@Override
 	public void  filterPositions(ChessPiece chessPieceHolder) {
-		new BishopFilterCriteria().filterPositions(chessPieceHolder);
-		new RookFilterCriteria().filterPositions(chessPieceHolder,chessBoard.getValidPositonsArray());	
+		bishopFilterCriteria.filterPositions(chessPieceHolder);
+		rookFilterCriteria.filterPositions(chessPieceHolder,chessBoard.getValidPositonsArray());	
 	}
 
 }

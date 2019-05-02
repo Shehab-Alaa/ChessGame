@@ -13,58 +13,36 @@ import pieces.ChessPiece;
 import players.Player;
 
 public class HardChessGame extends ChessGameLogic{
-	private boolean checkfirst;
-	private ArrayList<Position>validmoves;
-	private ImageIcon currentImageicon;
+	private boolean checkFirst;
+	private ArrayList<Position> validMoves;
+	private ImageIcon currentImageIcon;
 	private int seconds ;
 	private Thread timer;
 	
 	public HardChessGame(Player playerOne, Player playerTwo) {
 		super(playerOne, playerTwo);
-		checkfirst=true;
-		validmoves=new ArrayList<Position>();
-        currentImageicon=null;
+		checkFirst=true;
+		validMoves=new ArrayList<Position>();
+        currentImageIcon=null;
         seconds = 30;
-        timer = new Thread()
-		{
-			public void run() {
-			for(;;)
-			{
-				try {
-					sleep(1000);
-					seconds--;
-					System.out.println("Seconds: " + seconds);
-					if (seconds ==0)
-					{
-						seconds = 30;
-						playTurn++;
-						System.out.println("Player is Turned");
-					}
-				} 
-				catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			}
-		};
-		timer.start();
+        startCountDown();
     }
-
+	
 	private void gameLogic(Position buttonPosition,ChessPiece piece)
 	{
-		if(checkfirst)
+		if(checkFirst)
 		{
 			if(piece!=null)
 			{
-				validmoves = chessBoard.getValidPositions(piece);
-				currentImageicon = (ImageIcon) squares[buttonPosition.getRow()][buttonPosition.getColumn()].getIcon();
+				validMoves = chessBoard.getValidPositions(piece);
+				currentImageIcon = (ImageIcon) squares[buttonPosition.getRow()][buttonPosition.getColumn()].getIcon();
 				currentPiece=piece;
-				checkfirst=false;
+				checkFirst=false;
 			}
 		}
 		else
 		{		
-			checkfirst = true;
+			checkFirst = true;
 			if (piece != null && piece.getPieceColor().equals(currentPiece.getPieceColor()))
 			{
 				gameLogic(buttonPosition, piece);
@@ -72,21 +50,20 @@ public class HardChessGame extends ChessGameLogic{
 			
 			else 
 			{
-				for (int i=0;i<validmoves.size();i++)
+				for (int i=0;i<validMoves.size();i++)
 				{
-					if(validmoves.get(i).getRow() == buttonPosition.getRow() && validmoves.get(i).getColumn() == buttonPosition.getColumn())
+					if(validMoves.get(i).getRow() == buttonPosition.getRow() && validMoves.get(i).getColumn() == buttonPosition.getColumn())
 					{
 						if(piece != null)
 						{
 							chessBoard.pieceCaptured(piece);
 							squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(null);
 						}
-							squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(currentImageicon);
-							currentImageicon=null;
+							squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(currentImageIcon);
+							currentImageIcon=null;
 							squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
 							currentPiece.setCurrentPosition(buttonPosition);
-							if(new KingFilterCriteria().Checkmate(new KingFilterCriteria().getOppositeKingPiece(currentPiece.getPieceColor()),currentPiece)){
-				    			  
+							if(kingFilterCriteria.Checkmate(kingFilterCriteria.getOppositeKingPiece(currentPiece.getPieceColor()),currentPiece)){
 								//here check mate\
 				    	    	  JOptionPane.showMessageDialog(null, "Dead");
 				    	      }
@@ -100,6 +77,33 @@ public class HardChessGame extends ChessGameLogic{
 		
 	}
 	
+	private void startCountDown()
+	{
+		 timer = new Thread()
+			{
+				public void run() {
+				for(;;)
+				{
+					try {
+						sleep(1000);
+						seconds--;
+						System.out.println("Seconds: " + seconds);
+						if (seconds ==0)
+						{
+							seconds = 30;
+							playTurn++;
+							System.out.println("Player is Turned");
+						}
+					} 
+					catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				}
+			};
+			timer.start();
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		for (int i = 0;i<squares.length;i++)
@@ -111,7 +115,7 @@ public class HardChessGame extends ChessGameLogic{
 					ChessPiece holder = chessBoard.getPiece(new Position(i,j));
 					if(holder != null && playTurn % 2 == 0 && holder.getPieceColor().equals("White") 
 							||holder != null && playTurn % 2 == 1 && holder.getPieceColor().equals("Black")
-							||checkfirst == false )
+							||checkFirst == false )
 						 gameLogic(new Position(i,j),holder);
 				}
 			}

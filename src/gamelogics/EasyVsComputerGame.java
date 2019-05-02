@@ -13,6 +13,7 @@ import filters.KingFilterCriteria;
 import pieces.ChessPiece;
 import pieces.King;
 import pieces.Pawn;
+import pieces.Rook;
 import players.Player;
 public class EasyVsComputerGame extends EasyChessGame{
 
@@ -70,9 +71,8 @@ public class EasyVsComputerGame extends EasyChessGame{
 	
 	private void computerTurn(int column)
 	{
-		int c=0;
+		generateBestMove();
 		
-		generateBestMove(c);
 		if (chessBoard.hasPieceInPositon(bestPositionMove))
 		{
 			ChessPiece enemy = chessBoard.getPiece(bestPositionMove);
@@ -88,44 +88,38 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    	 bestPieceMove.setFirstMove(false);
 	    }
 	    bestPieceMove.setCurrentPosition(bestPositionMove);
-	    
 		playTurn++;
 	}
 	
-	private void generateBestMove(int c)
+	private void generateBestMove()
 	{	    
 		bestPieceMove = null;
 		bestPositionMove = null;
 		bestValueMove = 0;
-	    int  length=0,valueHolder=0;
-	    ChessPiece holder=null;
-		while (length<chessBoard.getChessPieces().size())
+		
+	    int valueHolder = 0;
+	    ChessPiece chessPieceHolder = null;
+	    
+		for (ChessPiece chessPiece : chessBoard.getChessPieces())
 		{
-			length++;
-			Random r=new Random();
-	        int randomNumber=r.nextInt(chessBoard.getChessPieces().size());
-			if (chessBoard.getChessPieces().get(randomNumber).getPieceColor()=="Black")
+			if (chessPiece.getPieceColor()=="Black")
 			{
-				Position Position=null;
-				for (Position position : chessBoard.getValidPositions(chessBoard.getChessPieces().get(randomNumber)))
-				{
-					Position=position;
-									
-							
+				for (Position position : chessBoard.getValidPositions(chessPiece))
+				{		
 						if (chessBoard.hasPieceInPositon(position))
 						{
 							ChessPiece enemyPiece = chessBoard.getPiece(position);
 							if(enemyPiece.getPieceColor()=="White") {
 								if (bestValueMove < enemyPiece.getPieceValue())
 								{
-									if(Protected(chessBoard.getChessPieces().get(randomNumber),enemyPiece)&&enemyPiece.getPieceValue()>=chessBoard.getChessPieces().get(randomNumber).getPieceValue())
+									if(Protected(chessPiece,enemyPiece)&&enemyPiece.getPieceValue()>=chessPiece.getPieceValue())
 									{
-										valueHolder=enemyPiece.getPieceValue();
-										holder=enemyPiece;
+										valueHolder = enemyPiece.getPieceValue();
+										chessPieceHolder = enemyPiece;
 									}
-									else if(!Protected(chessBoard.getChessPieces().get(randomNumber),enemyPiece))
+									else if(!Protected(chessPiece,enemyPiece))
 									{
-										bestPieceMove = chessBoard.getChessPieces().get(randomNumber);
+										bestPieceMove = chessPiece;
 										bestPositionMove = enemyPiece.getCurrentPosition();
 										bestValueMove = enemyPiece.getPieceValue();
 									}
@@ -134,16 +128,37 @@ public class EasyVsComputerGame extends EasyChessGame{
 						}
 					
 				}
-				if(bestPositionMove==null) {
-					 if(holder!=null){
-						bestPieceMove = holder;
-						bestPositionMove = holder.getCurrentPosition();
+			
+				if(bestPositionMove == null) {
+					if(chessPieceHolder != null){
+						bestPieceMove = chessPieceHolder;
+						bestPositionMove = chessPieceHolder.getCurrentPosition();
 					}
-					 else {
-							bestPieceMove = chessBoard.getChessPieces().get(randomNumber);
-							bestPositionMove = Position;
-					}
+			    	else {
+			    		generateRandomMove();
+	        		}
 				}
+				
+			}
+		}
+		
+	}
+	
+	private void generateRandomMove()
+	{
+		Random random = new Random();
+		int chessPieceIndex;
+		while(true)
+		{
+			chessPieceIndex = random.nextInt(chessBoard.getChessPieces().size());
+			if (chessBoard.getChessPieces().get(chessPieceIndex).getPieceColor().equals("Black")
+					&& !(chessBoard.getChessPieces().get(chessPieceIndex) instanceof King)
+					&& chessBoard.getValidPositions(chessBoard.getChessPieces().get(chessPieceIndex)).size() != 0)
+			{
+				bestPieceMove = chessBoard.getChessPieces().get(chessPieceIndex);
+				int positionIndex = random.nextInt(chessBoard.getValidPositions(chessBoard.getChessPieces().get(chessPieceIndex)).size());
+				bestPositionMove = chessBoard.getValidPositions(chessBoard.getChessPieces().get(chessPieceIndex)).get(positionIndex);
+				break;
 			}
 		}
 		
