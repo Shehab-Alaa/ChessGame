@@ -19,6 +19,7 @@ import memento.ChessBoardOriginator;
 import memento.ChessBoardState;
 import pieces.ChessPiece;
 import pieces.King;
+import pieces.Pawn;
 import players.Player;
 
 public class EasyChessGame extends ChessGameLogic{
@@ -26,6 +27,7 @@ public class EasyChessGame extends ChessGameLogic{
 	private ChessBoardOriginator chessBoardOriginator;
 	private ChessBoardCareTaker chessBoardCareTaker;
 	protected KingFilterCriteria kingFilterCriteria;
+    private ArrayList<ChessPiece>Enpassent;
 	
 	public EasyChessGame(Player playerOne, Player playerTwo) {
 		super(playerOne, playerTwo);
@@ -33,6 +35,7 @@ public class EasyChessGame extends ChessGameLogic{
 		chessBoardOriginator = new ChessBoardOriginator();
 		chessBoardCareTaker = new ChessBoardCareTaker();
 		kingFilterCriteria = new KingFilterCriteria();
+		Enpassent = new ArrayList<ChessPiece>();
 	}
 
 
@@ -69,7 +72,19 @@ public class EasyChessGame extends ChessGameLogic{
 	    	    	  JOptionPane.showMessageDialog(null, "Dead");
     			  }
 	    		  chessBoard.pieceCaptured(enemy);
-	    	  }	
+	    	  }
+	    	  
+	    	  if(currentPiece instanceof Pawn&&buttonPosition.getRow()==3&&playTurn%2==1&&buttonPosition.getRow()-currentPiece.getCurrentPosition().getRow()==2)
+    	      {
+	    		 Enpassent.add(currentPiece);
+	    		 
+	    	  }
+	    	  else if (currentPiece instanceof Pawn&&buttonPosition.getRow()==3&&playTurn%2==0&&currentPiece.getCurrentPosition().getRow()-buttonPosition.getRow()==2)
+	    	  {
+                 Enpassent.add(currentPiece);
+                 
+	    	  }
+	    	  
 	    		  ImageIcon iconHolder = (ImageIcon) squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].getIcon();
 	    		  squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
 	    	      squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(iconHolder);
@@ -84,6 +99,7 @@ public class EasyChessGame extends ChessGameLogic{
 	    			  //here check mate\
 	    	    	  JOptionPane.showMessageDialog(null, "Dead");
 	    	      }
+	    	      
 	    	      currentPiece = null; 
 	    	      playTurn++;
 	    	      saveChessBoardState();
@@ -91,25 +107,83 @@ public class EasyChessGame extends ChessGameLogic{
 	      }
 	      else
 	      {
+	    	 
 	    	 // uncolored
-	    	  if (chessBoard.hasPieceInPositon(buttonPosition) && hasTurn(buttonPosition)==true)
+	    	 
+	    	 if (chessBoard.hasPieceInPositon(buttonPosition) && hasTurn(buttonPosition)==true)
 	    	  {
+	    		 
 	    		  if(hasCurrentPiece())
 	    		  {
 	    			  removeColoredBorder();
 	    		  }
+	    		  
 	    		  currentPiece = chessBoard.getPiece(buttonPosition);
 	    		  colorValidPositions(chessBoard.getValidPositions(currentPiece));
 	    	  }
-	    	  else 
+	    	 else if(currentPiece instanceof Pawn )
+	    	 {
+	    		
+	    		 takeOver(buttonPosition); 
+	    	 }
+	    	 else 
 	    	  {
 	    		  removeColoredBorder();
 	    	  }
 	    	  
+	    	  
 	      }
 	  
 	}
-	
+	 
+	private void takeOver(Position OvertakePosition)
+	  {
+		 
+   	     
+   		  for(int i=0;i<Enpassent.size();i++)
+   		  {
+   			  if(currentPiece.getCurrentPosition().getRow()==3
+		    			  &&(currentPiece.getCurrentPosition().getColumn()+1==Enpassent.get(i).getCurrentPosition().getColumn()
+		    			  ||currentPiece.getCurrentPosition().getColumn()-1==Enpassent.get(i).getCurrentPosition().getColumn())
+		    			  &&Enpassent.get(i).getPieceColor().equals("Black")&&playTurn%2==0)
+		    	  {
+	    			  if(Enpassent.get(i).getCurrentPosition().getColumn()!=OvertakePosition.getColumn())
+	    				  continue;
+	    			  TakeOverremoved(OvertakePosition,i);	    			  
+	    			  break;
+		    	  }
+		    	  else if(currentPiece.getCurrentPosition().getRow()==3
+		    			  &&(currentPiece.getCurrentPosition().getColumn()+1==Enpassent.get(i).getCurrentPosition().getColumn()
+		    			  ||currentPiece.getCurrentPosition().getColumn()-1==Enpassent.get(i).getCurrentPosition().getColumn())
+		    			  &&Enpassent.get(i).getPieceColor().equals("White")&&playTurn%2==1)
+		    	  {
+		    		  if(Enpassent.get(i).getCurrentPosition().getColumn()!=OvertakePosition.getColumn())
+	    				  continue;
+		    		  TakeOverremoved(OvertakePosition,i);
+		    	      break;
+		    		  
+		    	  }
+
+   		  }
+	    }
+     
+   	private void TakeOverremoved (Position positionOverTake,int index)
+   	{
+   		ChessPiece captured = chessBoard.getPiece(Enpassent.get(index).getCurrentPosition());
+   		squares[Enpassent.get(index).getCurrentPosition().getRow()][Enpassent.get(index).getCurrentPosition().getColumn()].setIcon(null);
+   		chessBoard.pieceCaptured(captured);
+   		ImageIcon iconHolder = (ImageIcon) squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].getIcon();
+		  squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
+		  
+	      squares[positionOverTake.getRow()][positionOverTake.getColumn()].setIcon(iconHolder);
+	      Enpassent.remove(index);
+	      currentPiece.setCurrentPosition(positionOverTake);
+	      System.out.print(currentPiece.getCurrentPosition().getRow() +"/ " +currentPiece.getCurrentPosition().getColumn()) ;
+	      currentPiece = null; 
+	      playTurn++;
+	      removeColoredBorder();
+   	}
+   		
 	private boolean hasTurn(Position position)
 	{
 		if (playTurn % 2 == 0 && chessBoard.getPiece(position).getPieceColor().equals("White"))
