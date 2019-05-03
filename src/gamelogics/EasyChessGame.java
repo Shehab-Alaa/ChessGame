@@ -19,12 +19,13 @@ import memento.ChessBoardOriginator;
 import memento.ChessBoardState;
 import pieces.ChessPiece;
 import pieces.King;
+import pieces.Pawn;
 import players.Player;
 
 public class EasyChessGame extends ChessGameLogic{
 
 	private ChessBoardOriginator chessBoardOriginator;
-	private ChessBoardCareTaker chessBoardCareTaker;
+	private ChessBoardCareTaker chessBoardCareTaker;	
 	
 	public EasyChessGame(Player playerOne, Player playerTwo) {
 		super(playerOne, playerTwo);
@@ -68,7 +69,8 @@ public class EasyChessGame extends ChessGameLogic{
 	    	    	  JOptionPane.showMessageDialog(null, "Dead");
     			  }
 	    		  chessBoard.pieceCaptured(enemy);
-	    	  }	
+	    	  }
+	     	  	    	  
 	    		  ImageIcon iconHolder = (ImageIcon) squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].getIcon();
 	    		  squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
 	    	      squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(iconHolder);
@@ -117,7 +119,7 @@ public class EasyChessGame extends ChessGameLogic{
 			return true;
 		return false;
 	}
-	
+		
 	public void removeColoredBorder()
 	{
 		for (int i =0;i<8;i++)
