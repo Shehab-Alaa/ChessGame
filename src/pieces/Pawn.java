@@ -61,7 +61,7 @@ public class Pawn extends ChessPiece implements ForwardMovement , DiagonalMoveme
 		ArrayList<Position> pawnforward =new ArrayList<Position>();
 		if(color.equals("White"))
 		{
-			if(currentPosition.getRow()<7)
+			if(currentPosition.getRow()<7&&currentPosition.getRow()>0)
 				{
 					Position p=new Position(currentPosition.getRow()-1,currentPosition.getColumn());
 					pawnforward.add(p);
@@ -74,7 +74,7 @@ public class Pawn extends ChessPiece implements ForwardMovement , DiagonalMoveme
 		}
 		else 
 		{
-			if(currentPosition.getRow()>0)
+			if(currentPosition.getRow()>0&&currentPosition.getRow()<7)
 			{
 				Position p2=new Position(currentPosition.getRow()+1,currentPosition.getColumn());
 				pawnforward.add(p2);

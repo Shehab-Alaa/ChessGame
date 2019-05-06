@@ -1,6 +1,7 @@
 package gamelogics;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import javax.swing.border.LineBorder;
 import board.ChessBoard;
 import extra.Position;
 import filters.KingFilterCriteria;
+import game.Promotion;
 import memento.ChessBoardCareTaker;
 import memento.ChessBoardOriginator;
 import memento.ChessBoardState;
@@ -26,15 +28,45 @@ public class EasyChessGame extends ChessGameLogic{
 
 	private ChessBoardOriginator chessBoardOriginator;
 	private ChessBoardCareTaker chessBoardCareTaker;	
+	private JButton undo;
+	private JButton redo;
 	
 	public EasyChessGame(Player playerOne, Player playerTwo) {
 		super(playerOne, playerTwo);
-		
 		chessBoardOriginator = new ChessBoardOriginator();
 		chessBoardCareTaker = new ChessBoardCareTaker();
 		kingFilterCriteria = new KingFilterCriteria();
+		
+		extraUIFunctionality();
 	}
 
+	private void extraUIFunctionality()
+	{
+		undo = new JButton("");
+		undo.setBackground(new Color(230,220,200));
+		undo.setIcon(new ImageIcon(getClass().getResource("/assets/undo_icon.png")));
+		undo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			    undo();
+			}
+		});
+		undo.setBounds(208, 162, 50, 50);
+		panel.add(undo);
+		
+		redo = new JButton("");
+		redo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				redo();
+			}
+		});
+		redo.setBackground(new Color(230,220,200));
+		redo.setIcon(new ImageIcon(getClass().getResource("/assets/redo_icon.png")));
+		redo.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		redo.setBounds(268, 162, 50, 50);
+		panel.add(redo);
+		
+	    boardFrame.setVisible(true);
+	}
 
 	public void colorValidPositions(ArrayList<Position> positionsHolder)
 	{
@@ -54,12 +86,12 @@ public class EasyChessGame extends ChessGameLogic{
 	
 	protected void gameLogic(Position buttonPosition)
 	{		
-		if (!squares[buttonPosition.getRow()][buttonPosition.getColumn()].getBorder().equals(new JButton().getBorder()))
+		if (!squares[buttonPosition.getRow()][buttonPosition.getColumn()].getBorder().equals(new JButton().getBorder())&& !OvertakeCheckedColored())
 	      {
 	    	 // colored
 			  if (playTurn == 0)
 				  saveChessBoardState();
-			  
+			  OverTakeRemoved(buttonPosition);
 	    	  if(chessBoard.hasPieceInPositon(buttonPosition))
 	    	  {
 	    		  ChessPiece enemy = chessBoard.getPiece(buttonPosition);
@@ -70,7 +102,7 @@ public class EasyChessGame extends ChessGameLogic{
     			  }
 	    		  chessBoard.pieceCaptured(enemy);
 	    	  }
-	     	  	    	  
+	     	  	   OverTakeSaved(buttonPosition);
 	    		  ImageIcon iconHolder = (ImageIcon) squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].getIcon();
 	    		  squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
 	    	      squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(iconHolder);
@@ -85,10 +117,19 @@ public class EasyChessGame extends ChessGameLogic{
 	    			  //here check mate\
 	    	    	  JOptionPane.showMessageDialog(null, "Dead");
 	    	      }
-	    	      currentPiece = null; 
-	    	      playTurn++;
-	    	      saveChessBoardState();
-	    	      //chessBoard.rotateChessBoard();
+	    	      if(checkPromotion())
+	    	      {
+	    	    	  Promotion promotion = new Promotion(this);
+	    	    	  boardFrame.setEnabled(false);
+	    	      }
+	    	      else
+	    	      {
+	    	        currentPiece = null;
+	    	        promotedPiece = null;
+	    	        playTurn++;
+	    	        saveChessBoardState();
+	    	        displayCapturedPieces();
+	    	      }
 	      }
 	      else
 	      {
@@ -101,6 +142,13 @@ public class EasyChessGame extends ChessGameLogic{
 	    		  }
 	    		  currentPiece = chessBoard.getPiece(buttonPosition);
 	    		  colorValidPositions(chessBoard.getValidPositions(currentPiece));
+	    		  OvertakeCheckedColored();
+	    	  }
+	    	  else if (currentPiece instanceof Pawn &&(buttonPosition.getRow()-currentPiece.getCurrentPosition().getRow()==-1
+	    			  ||buttonPosition.getRow()-currentPiece.getCurrentPosition().getRow()==1))
+	    	  {
+	    		  takeOver(buttonPosition);
+	    		  removeColoredBorder();
 	    	  }
 	    	  else 
 	    	  {
@@ -111,7 +159,7 @@ public class EasyChessGame extends ChessGameLogic{
 	  
 	}
 	
-	private boolean hasTurn(Position position)
+	public boolean hasTurn(Position position)
 	{
 		if (playTurn % 2 == 0 && chessBoard.getPiece(position).getPieceColor().equals("White"))
 			return true;
@@ -135,7 +183,7 @@ public class EasyChessGame extends ChessGameLogic{
 
 	public void saveChessBoardState()
 	{
-		chessBoardOriginator.setState(new ChessBoardState(chessBoard.getChessPieces() , chessBoard.getCapturedPieces() , chessBoard.getSquares() , playTurn));
+		chessBoardOriginator.setState(new ChessBoardState(chessBoard.getChessPieces() , chessBoard.getCapturedPieces() , squares , playTurn));
 		chessBoardCareTaker.addChessBoardState(chessBoardOriginator.saveStateToMemento());
 		chessBoardCareTaker.deleteRedoChessBoardStates();
 	}
@@ -143,19 +191,20 @@ public class EasyChessGame extends ChessGameLogic{
 	public void undo()
 	{
 	   try {
-		   chessBoardOriginator.getStateFromMemento(chessBoardCareTaker.getUndoState());
+		    chessBoardOriginator.getStateFromMemento(chessBoardCareTaker.getUndoState());
 			ChessBoardState chessBoardStateHolder = chessBoardOriginator.getState();
 			
 			if (!chessBoardStateHolder.equals(null))
 			{
 				chessBoard.setChessPieces(chessBoardStateHolder.getChessPieces());
 				chessBoard.setCapturedPieces(chessBoardStateHolder.getCapturedPieces());
-				chessBoard.setSquares(chessBoardStateHolder.getSquares());
+				setSquares(chessBoardStateHolder.getSquares());
 				playTurn = chessBoardStateHolder.getPlayTurn();
+				displayCapturedPieces();
 			}
 	   }catch(NullPointerException ex)
 	   {
-			JOptionPane.showMessageDialog(null, "Nothing to Undo");
+			JOptionPane.showMessageDialog(boardFrame, "Nothing to Undo");
 	   }
 		
 	}
@@ -170,12 +219,13 @@ public class EasyChessGame extends ChessGameLogic{
 			{
 				chessBoard.setChessPieces(chessBoardStateHolder.getChessPieces());
 				chessBoard.setCapturedPieces(chessBoardStateHolder.getCapturedPieces());
-				chessBoard.setSquares(chessBoardStateHolder.getSquares());
+				setSquares(chessBoardStateHolder.getSquares());
 				playTurn = chessBoardStateHolder.getPlayTurn();
+				displayCapturedPieces();
 			}
 		}catch(NullPointerException ex)
 		{
-			JOptionPane.showMessageDialog(null, "Nothing to Redo");
+			JOptionPane.showMessageDialog(boardFrame, "Nothing to Redo");
 		}
 	}
 	
@@ -199,6 +249,16 @@ public class EasyChessGame extends ChessGameLogic{
 				}
 			}
 		}
+	}
+
+	@Override
+	void afterPromotion() {
+		currentPiece = null;
+		promotedPiece = null;
+		saveChessBoardState();
+        displayCapturedPieces();	
+		boardFrame.setEnabled(true);
+        playTurn++;
 	}
 	
 	

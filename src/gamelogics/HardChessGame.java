@@ -1,15 +1,19 @@
 package gamelogics;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import board.ChessBoard;
 import extra.Position;
 import filters.KingFilterCriteria;
 import pieces.ChessPiece;
+import pieces.Pawn;
 import players.Player;
 
 public class HardChessGame extends ChessGameLogic{
@@ -18,12 +22,23 @@ public class HardChessGame extends ChessGameLogic{
 	private ImageIcon currentImageIcon;
 	private int seconds ;
 	private Thread timer;
+	private JLabel timerLabel;
+
 	
 	public HardChessGame(Player playerOne, Player playerTwo) {
 		super(playerOne, playerTwo);
 		checkFirst=true;
 		validMoves=new ArrayList<Position>();
         currentImageIcon=null;
+        
+    	timerLabel = new JLabel("30");
+		timerLabel.setForeground(Color.RED);
+		timerLabel.setFont(new Font("Algerian", Font.BOLD, 32));
+		timerLabel.setBounds(35, 311, 50, 46);
+		panel.add(timerLabel);
+		
+		boardFrame.setVisible(true);  
+    
         seconds = 30;
         startCountDown();
     }
@@ -37,6 +52,7 @@ public class HardChessGame extends ChessGameLogic{
 				validMoves = chessBoard.getValidPositions(piece);
 				currentImageIcon = (ImageIcon) squares[buttonPosition.getRow()][buttonPosition.getColumn()].getIcon();
 				currentPiece=piece;
+				OverTakeRemoved(buttonPosition);
 				checkFirst=false;
 			}
 		}
@@ -59,18 +75,24 @@ public class HardChessGame extends ChessGameLogic{
 							chessBoard.pieceCaptured(piece);
 							squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(null);
 						}
+						OverTakeSaved(buttonPosition);
 							squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(currentImageIcon);
 							currentImageIcon=null;
 							squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
 							currentPiece.setCurrentPosition(buttonPosition);
-							if(kingFilterCriteria.Checkmate(kingFilterCriteria.getOppositeKingPiece(currentPiece.getPieceColor()),currentPiece)){
+							/*if(kingFilterCriteria.Checkmate(kingFilterCriteria.getOppositeKingPiece(currentPiece.getPieceColor()),currentPiece)){
 								//here check mate\
 				    	    	  JOptionPane.showMessageDialog(null, "Dead");
-				    	      }
+				    	      }*/
 							currentPiece=null;
 							seconds = 30;
 							playTurn++;
 						}
+				}
+				if(currentPiece instanceof Pawn &&(buttonPosition.getRow()-currentPiece.getCurrentPosition().getRow()==-1
+						||buttonPosition.getRow()-currentPiece.getCurrentPosition().getRow()==1))
+				{
+					takeOver(buttonPosition);
 				}
 			}
 		}
@@ -87,12 +109,11 @@ public class HardChessGame extends ChessGameLogic{
 					try {
 						sleep(1000);
 						seconds--;
-						System.out.println("Seconds: " + seconds);
+						timerLabel.setText(seconds + "");
 						if (seconds ==0)
 						{
 							seconds = 30;
 							playTurn++;
-							System.out.println("Player is Turned");
 						}
 					} 
 					catch (InterruptedException e) {
@@ -120,5 +141,11 @@ public class HardChessGame extends ChessGameLogic{
 				}
 			}
 		}
+	}
+
+	@Override
+	void afterPromotion() {
+		// TODO Auto-generated method stub
+		
 	}
 }

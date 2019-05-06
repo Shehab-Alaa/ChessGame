@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 
 import board.ChessBoard;
 import extra.Position;
+import gamelogics.EasyChessGame;
 import pieces.ChessPiece;
 import pieces.King;
 import pieces.Knight;
@@ -103,10 +104,8 @@ public class KingFilterCriteria implements FilterCriteria{
  		
  		chessBoard.setValidPositions(chessBoard.filter(kingChessPiece));
 		chessBoard.setValidPositions(currentPiecevalidPosition);
-
  					int length= kingChessPiece.getValidMoves().size();
- 					
- 		if(length!=friendCounter	 && length == friendCounter + enemyCounter ) {
+ 		if(length!=friendCounter && length == friendCounter + enemyCounter ) {
  			return true;
  		}
  		
@@ -135,7 +134,7 @@ public class KingFilterCriteria implements FilterCriteria{
 				filterEnemyPositions(chessBoard.getChessPieces().get(i), chessPieceHolder, chessBoard.getValidPositonsArray());
 			}
 		}
-		if(!chessPieceHolder.isFirstMove() && chessBoard.getCcurrentPiece() instanceof King) {
+		if(!chessPieceHolder.isFirstMove() && chessBoard.getCurrentPiece() instanceof King) {
 			start:for(ChessPiece rook: chessBoard.getChessPieces()) {
 				if(rook instanceof Rook &&!rook.isFirstMove()&&rook.getPieceColor()==chessPieceHolder.getPieceColor()) {
 						for(int i=Math.min(rook.getCurrentPosition().getColumn(),chessPieceHolder.getCurrentPosition().getColumn())+1;i<Math.max(rook.getCurrentPosition().getColumn(),chessPieceHolder.getCurrentPosition().getColumn());i++)
@@ -183,10 +182,10 @@ public class KingFilterCriteria implements FilterCriteria{
 	}
 	
     private void assignNewPosition(ChessPiece kingPiece,ChessPiece rook,int column,int i) {
-    	ImageIcon iconHolder = (ImageIcon)  chessBoard.getSquares()[rook.getCurrentPosition().getRow()][rook.getCurrentPosition().getColumn()].getIcon();
-		  chessBoard.getSquares()[rook.getCurrentPosition().getRow()][rook.getCurrentPosition().getColumn()].setIcon(null);
-		  chessBoard.getSquares()[kingPiece.getCurrentPosition().getRow()][column+i].setIcon(iconHolder);
-		rook.setCurrentPosition(new Position(kingPiece.getCurrentPosition().getRow(),column+i));
+   	     ImageIcon iconHolder = (ImageIcon) EasyChessGame.getSquares()[rook.getCurrentPosition().getRow()][rook.getCurrentPosition().getColumn()].getIcon();
+		 EasyChessGame.getSquares()[rook.getCurrentPosition().getRow()][rook.getCurrentPosition().getColumn()].setIcon(null);
+		 EasyChessGame.getSquares()[kingPiece.getCurrentPosition().getRow()][column+i].setIcon(iconHolder);
+		 rook.setCurrentPosition(new Position(kingPiece.getCurrentPosition().getRow(),column+i));
     }
     
     public void Castling(ChessPiece kingPiece,int column) {
@@ -204,8 +203,5 @@ public class KingFilterCriteria implements FilterCriteria{
 			  rook.setFirstMove(true);
     	}
     }
-
-
-
     
 }

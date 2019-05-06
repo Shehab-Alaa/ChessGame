@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import board.ChessBoard;
 import extra.Position;
 import filters.KingFilterCriteria;
+import game.Promotion;
 import pieces.ChessPiece;
 import pieces.King;
 import pieces.Pawn;
@@ -30,13 +31,23 @@ public class EasyVsComputerGame extends EasyChessGame{
 	{		
 		if (!squares[buttonPosition.getRow()][buttonPosition.getColumn()].getBorder().equals(new JButton().getBorder()))
 	      {
+			 
+			 if (playTurn == 0)
+				  saveChessBoardState();
+			 
 	    	 // colored
-	    	  if(chessBoard.hasPieceInPositon(buttonPosition))
+	    	 
+			 if(chessBoard.hasPieceInPositon(buttonPosition))
 	    	  {
 	    		  ChessPiece enemy = chessBoard.getPiece(buttonPosition);
 	    		  squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(null);
+	    		  if(enemy instanceof King)
+    			  {
+	    	    	  JOptionPane.showMessageDialog(null, "Dead");
+    			  }
 	    		  chessBoard.pieceCaptured(enemy);
 	    	  }	
+			 
 	    		  ImageIcon iconHolder = (ImageIcon) squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].getIcon();
 	    		  squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
 	    	      squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(iconHolder);
@@ -45,16 +56,24 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    	    	  JOptionPane.showMessageDialog(null, "Dead");
 	    	      }
 	    	      removeColoredBorder();
-	    	      
 	    	      currentPiece.setCurrentPosition(buttonPosition);
-	    	      computerTurn(buttonPosition.getColumn());
-	    	      currentPiece = null;    	      
-	    	      playTurn++;
+	    	      if(checkPromotion())
+	    	      {
+	    	    	  Promotion promotion = new Promotion(this);
+	    	    	  boardFrame.setEnabled(false);
+	    	      }
+	    	      else
+	    	      {
+	    	        computerTurn(buttonPosition.getColumn());
+	    	        playTurn++;
+	    	        saveChessBoardState();
+	    	        displayCapturedPieces();
+	    	      }
 	      }
 	      else
 	      {
 	    	 // uncolored
-	    	  if (chessBoard.hasPieceInPositon(buttonPosition))
+	    	  if (chessBoard.hasPieceInPositon(buttonPosition) && hasTurn(buttonPosition) == true)
 	    	  {
 	    		  if(hasCurrentPiece())
 	    		  {
@@ -62,8 +81,9 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    		  }
 	    		  currentPiece = chessBoard.getPiece(buttonPosition);
 	    		  colorValidPositions(chessBoard.getValidPositions(currentPiece));
+	    	      
 	    	  }
-	    	  else removeColoredBorder();
+    	       else removeColoredBorder();
 	    	  
 	      }
 	  
@@ -88,7 +108,19 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    	 bestPieceMove.setFirstMove(false);
 	    }
 	    bestPieceMove.setCurrentPosition(bestPositionMove);
-		playTurn++;
+	    if (checkPromotion())
+	    {
+	       	Random random = new Random();
+	       	int promotedPieceType = random.nextInt(4) + 1;
+	       	currentPiece = bestPieceMove;
+	       	promote(promotedPieceType);
+	    }
+	    else 
+	    {  
+		   playTurn++;
+		   saveChessBoardState();
+	       displayCapturedPieces();
+	    }
 	}
 	
 	private void generateBestMove()
@@ -144,6 +176,30 @@ public class EasyVsComputerGame extends EasyChessGame{
 		
 	}
 	
+
+	@Override
+	void afterPromotion() {
+		if (playTurn % 2 == 0)
+		{
+		   int column = currentPiece.getCurrentPosition().getColumn();	
+		   currentPiece = null;
+		   promotedPiece = null;
+		   saveChessBoardState();
+	       displayCapturedPieces();	
+		   boardFrame.setEnabled(true);
+		   computerTurn(column);
+	       playTurn++;
+		}
+		else
+		{
+		  currentPiece = null;
+		  promotedPiece = null;
+	      saveChessBoardState();
+	      displayCapturedPieces();
+	      playTurn++;
+		}
+	}
+    
 	private void generateRandomMove()
 	{
 		Random random = new Random();

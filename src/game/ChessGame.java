@@ -1,15 +1,18 @@
 package game;
 
+import java.awt.Font;
+
+import extra.Position;
 import gamelogics.EasyChessGame;
 import gamelogics.EasyVsComputerGame;
 import gamelogics.HardChessGame;
+import pieces.ChessPiece;
 import players.Player;
 
 public class ChessGame {
-  public static void main(String[]args)
+  public static void main(String[]args) throws InterruptedException
   {
-	// new HardChessGame(new Player("Shehab" , "White") , new Player("Alaa" , "Black"));
-     new EasyChessGame(new Player("Shehab" , "White") , new Player("Alaa" , "Black"));
-	//new EasyVsComputerGame(new Player("Shehab" , "White") , new Player("Alaa" , "Black"));
+	  SplashScreen splashScreen = new SplashScreen();
+	  splashScreen.run();
   }
 }

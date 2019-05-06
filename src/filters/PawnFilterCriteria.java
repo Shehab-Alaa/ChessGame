@@ -25,11 +25,6 @@ public class PawnFilterCriteria implements FilterCriteria{
 		ArrayList<Position> deletedPositions = new ArrayList<>();
 		Position positionHolder;
 		
-		  // indexOutOfRange;;
-	    for (Position position : chessPieceHolder.getValidMoves())
-	    	if (position.getRow() < 0 || position.getRow() > 7 || position.getColumn() < 0 || position.getColumn() > 7)
-	    		deletedPositions.add(position);
-		
 		if (chessPieceHolder.getPieceColor().equals("White"))
 		{
 			if (chessPieceHolder.getCurrentPosition().getRow() == 6)
