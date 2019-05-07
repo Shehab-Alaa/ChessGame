@@ -57,6 +57,7 @@ abstract public class ChessGameLogic extends JFrame implements ActionListener {
    {
 	   this.playerOne = playerOne;
 	   this.playerTwo = playerTwo;
+	   kingFilterCriteria = new KingFilterCriteria();
 	   chessBoard = ChessBoard.getChessBoardInstance();
 	   initializeUI();
 	   setPlayersNames(playerOne.getName(), playerTwo.getName());
@@ -262,7 +263,7 @@ abstract public class ChessGameLogic extends JFrame implements ActionListener {
 		boardFrame.getContentPane().add(label_6);
 		
 		
-		JLabel lblA = new JLabel("A       B        C       D       E       F      G       H");
+		JLabel lblA = new JLabel("A       B        C       D       E         F        G       H");
 		lblA.setForeground(new Color(204,153,0));
 		lblA.setBackground(Color.BLACK);
 		lblA.setFont(new Font("Microsoft YaHei", Font.BOLD, 26));
@@ -279,7 +280,8 @@ abstract public class ChessGameLogic extends JFrame implements ActionListener {
 						int x = JOptionPane.showConfirmDialog(boardFrame,"QUIT GAME ?","Question",JOptionPane.YES_NO_OPTION);
 						if(x==JOptionPane.YES_OPTION)
 						{
-							boardFrame.setVisible(false);
+							chessBoard.resetBoard();
+						    boardFrame.setVisible(false);
 							GameMenu gameMenu = new GameMenu();
 						}
 					}
@@ -310,6 +312,7 @@ abstract public class ChessGameLogic extends JFrame implements ActionListener {
 	   playerTwoNameLabel.setText(playerTwoName);
 	   playerTwoNameLabel.setFont(new Font("Microsoft YaHei", Font.BOLD, 20));
 	}
+
 	
 	public boolean checkPromotion()
 	{
@@ -319,9 +322,10 @@ abstract public class ChessGameLogic extends JFrame implements ActionListener {
 		return false;
 	}
 	   
-	   public boolean OvertakeCheckedColored()
+	 public boolean OvertakeCheckedColored(Position buttonPosition)
 		{
 		   Boolean found= false;
+		   Boolean NoOvertake= true;
 		   
 			for(int i=0;i<Enpassent.size();i++)
 			  {
@@ -331,6 +335,12 @@ abstract public class ChessGameLogic extends JFrame implements ActionListener {
 	 				  ||Enpassent.get(i).getCurrentPosition().getColumn()-currentPiece.getCurrentPosition().getColumn()==-1)&&
 	 				  !currentPiece.getPieceColor().equals(Enpassent.get(i).getPieceColor()))
 				  {
+					  if(buttonPosition.getColumn() !=Enpassent.get(i).getCurrentPosition().getColumn()&&
+							  (buttonPosition.getColumn() == currentPiece.getCurrentPosition().getColumn()||
+									  buttonPosition.getColumn() != currentPiece.getCurrentPosition().getColumn())  && currentPiece instanceof Pawn)
+					  {
+						  NoOvertake= false;
+					  }
 					  if(currentPiece.getCurrentPosition().getRow()==3&&playTurn%2==0)
 					  {
 						  squares[Enpassent.get(i).getCurrentPosition().getRow()][Enpassent.get(i).getCurrentPosition().getColumn()].setBorder(new LineBorder(Color.yellow, 3));
@@ -350,7 +360,7 @@ abstract public class ChessGameLogic extends JFrame implements ActionListener {
 				  }
 				  
 			  }
-			if(found)
+			if(found && NoOvertake)
 				return true;
 			else
 				return false;

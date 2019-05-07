@@ -47,6 +47,7 @@ public class ChessBoard{
 	private ArrayList<ChessPiece> capturedPieces;
 	private ChessPiece currentPiece;
 	private FiltersHelper filtersHelper;
+	private int friendCounter = 0, enemyCounter = 0;
 	
 	
 	public static ChessBoard getChessBoardInstance()
@@ -105,7 +106,6 @@ public class ChessBoard{
 		return new KingFilterCriteria().checkKingProtection(filter(chessPiece),currentPiece);
 	}
 
-
     public ArrayList<Position> filter(ChessPiece chessPiece) {
 		filtersHelper.filterPositions(chessPiece);        
 		return validPositions;
@@ -157,6 +157,11 @@ public class ChessBoard{
 		this.validPositions = validPositions;
 	}
 	
+	public void resetBoard()
+	{
+		initBoard();
+	}
+	
 	public void setChessPieces(ArrayList<ChessPiece> chessPieces)
 	{
 		this.chessPieces = new ArrayList<>(chessPieces);
@@ -167,4 +172,40 @@ public class ChessBoard{
 		this.capturedPieces = new ArrayList<>(capturedPieces);
 	}
 	
+	public void setFriendCounter(int friendCounter)
+	{
+		this.friendCounter = friendCounter;
+	}
+	
+	public void setEnemyCounter(int enemyCounter)
+	{
+		this.enemyCounter = enemyCounter;
+	}
+	
+	public void incrementFriendCounter()
+	{
+		friendCounter++;
+	}
+	
+	public void incrementEnemyCounter()
+	{
+		enemyCounter++;
+	}
+	
+	public int getFriendCounter()
+	{
+		return friendCounter;
+	}
+	
+	public int getEnemyCounter()
+	{
+		return enemyCounter;
+	}
+	public int evaluateBoard(ArrayList<ChessPiece> evaluatedPieces) {
+		int value=0;
+		for(ChessPiece currentPiece: evaluatedPieces) 
+			value += currentPiece.getPieceValue() * (currentPiece.getPieceColor().equals("White") ? 1 : -1);
+		return value;
+	}
+
 }

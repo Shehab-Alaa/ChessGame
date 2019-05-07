@@ -86,7 +86,7 @@ public class EasyChessGame extends ChessGameLogic{
 	
 	protected void gameLogic(Position buttonPosition)
 	{		
-		if (!squares[buttonPosition.getRow()][buttonPosition.getColumn()].getBorder().equals(new JButton().getBorder())&& !OvertakeCheckedColored())
+		if (!squares[buttonPosition.getRow()][buttonPosition.getColumn()].getBorder().equals(new JButton().getBorder())&& !OvertakeCheckedColored(buttonPosition))
 	      {
 	    	 // colored
 			  if (playTurn == 0)
@@ -96,13 +96,10 @@ public class EasyChessGame extends ChessGameLogic{
 	    	  {
 	    		  ChessPiece enemy = chessBoard.getPiece(buttonPosition);
 	    		  squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(null);
-	    		  if(enemy instanceof King)
-    			  {
-	    	    	  JOptionPane.showMessageDialog(null, "Dead");
-    			  }
+	    		 
 	    		  chessBoard.pieceCaptured(enemy);
 	    	  }
-	     	  	   OverTakeSaved(buttonPosition);
+	     	  	  OverTakeSaved(buttonPosition);
 	    		  ImageIcon iconHolder = (ImageIcon) squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].getIcon();
 	    		  squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
 	    	      squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(iconHolder);
@@ -142,7 +139,7 @@ public class EasyChessGame extends ChessGameLogic{
 	    		  }
 	    		  currentPiece = chessBoard.getPiece(buttonPosition);
 	    		  colorValidPositions(chessBoard.getValidPositions(currentPiece));
-	    		  OvertakeCheckedColored();
+	    		  OvertakeCheckedColored(buttonPosition);
 	    	  }
 	    	  else if (currentPiece instanceof Pawn &&(buttonPosition.getRow()-currentPiece.getCurrentPosition().getRow()==-1
 	    			  ||buttonPosition.getRow()-currentPiece.getCurrentPosition().getRow()==1))

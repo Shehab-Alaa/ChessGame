@@ -13,16 +13,17 @@ import board.ChessBoard;
 import extra.Position;
 import filters.KingFilterCriteria;
 import pieces.ChessPiece;
+import pieces.King;
 import pieces.Pawn;
 import players.Player;
 
 public class HardChessGame extends ChessGameLogic{
-	private boolean checkFirst;
-	private ArrayList<Position> validMoves;
-	private ImageIcon currentImageIcon;
-	private int seconds ;
-	private Thread timer;
-	private JLabel timerLabel;
+	protected boolean checkFirst;
+	protected ArrayList<Position> validMoves;
+	protected ImageIcon currentImageIcon;
+	protected int seconds ;
+	protected Thread timer;
+	protected JLabel timerLabel;
 
 	
 	public HardChessGame(Player playerOne, Player playerTwo) {
@@ -75,15 +76,24 @@ public class HardChessGame extends ChessGameLogic{
 							chessBoard.pieceCaptured(piece);
 							squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(null);
 						}
+						
 						OverTakeSaved(buttonPosition);
-							squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(currentImageIcon);
-							currentImageIcon=null;
-							squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
+						squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(currentImageIcon);
+						squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
+						//currentImageIcon=null;							
+							
+							if(currentPiece instanceof King)
+				    	    	 new KingFilterCriteria().Castling(currentPiece, buttonPosition.getColumn());
+					    	  
+				    	    currentPiece.setFirstMove(true);
 							currentPiece.setCurrentPosition(buttonPosition);
-							/*if(kingFilterCriteria.Checkmate(kingFilterCriteria.getOppositeKingPiece(currentPiece.getPieceColor()),currentPiece)){
+							//System.out.println(currentPiece.getPieceColor());
+							
+							  if(kingFilterCriteria.Checkmate(kingFilterCriteria.getOppositeKingPiece(currentPiece.getPieceColor()),currentPiece)){
 								//here check mate\
 				    	    	  JOptionPane.showMessageDialog(null, "Dead");
-				    	      }*/
+				    	       }
+							
 							currentPiece=null;
 							seconds = 30;
 							playTurn++;

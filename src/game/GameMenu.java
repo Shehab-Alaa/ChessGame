@@ -19,6 +19,7 @@ import board.ChessBoard;
 import gamelogics.EasyChessGame;
 import gamelogics.EasyVsComputerGame;
 import gamelogics.HardChessGame;
+import gamelogics.HardVsComputerGame;
 import players.Computer;
 import players.Player;
 
@@ -150,7 +151,7 @@ public class GameMenu {
 			    else if (checkHardLevel == true && checkComputer == true)
 			    {
 			    	gameMenuFrame.setVisible(false);
-			    	//HardVsComputer
+			    	HardVsComputerGame hardVsComputerGame = new HardVsComputerGame(new Player(playerOneNameText.getText() , "White") , new Computer()); 
 			    }
 			}
 		});

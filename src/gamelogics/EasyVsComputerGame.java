@@ -51,13 +51,19 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    		  ImageIcon iconHolder = (ImageIcon) squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].getIcon();
 	    		  squares[currentPiece.getCurrentPosition().getRow()][currentPiece.getCurrentPosition().getColumn()].setIcon(null);
 	    	      squares[buttonPosition.getRow()][buttonPosition.getColumn()].setIcon(iconHolder);
-	    	      if(kingFilterCriteria.Checkmate(kingFilterCriteria.getOppositeKingPiece(currentPiece.getPieceColor()),currentPiece)){
-	    			  //here check mate\
-	    	    	  JOptionPane.showMessageDialog(null, "Dead");
-	    	      }
 	    	      removeColoredBorder();
-	    	      currentPiece.setCurrentPosition(buttonPosition);
-	    	      if(checkPromotion())
+	    	      if(currentPiece instanceof King)
+	    	    	  kingFilterCriteria.Castling(currentPiece, buttonPosition.getColumn());
+		    	  
+	    	      currentPiece.setFirstMove(true);
+				currentPiece.setCurrentPosition(buttonPosition);
+				//System.out.println(currentPiece.getPieceColor());
+				
+				  if(kingFilterCriteria.Checkmate(kingFilterCriteria.getOppositeKingPiece(currentPiece.getPieceColor()),currentPiece)){
+					//here check mate\
+	    	    	  JOptionPane.showMessageDialog(null, "Dead");
+	    	       }
+	    	     /* if(checkPromotion())
 	    	      {
 	    	    	  Promotion promotion = new Promotion(this);
 	    	    	  boardFrame.setEnabled(false);
@@ -68,7 +74,12 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    	        playTurn++;
 	    	        saveChessBoardState();
 	    	        displayCapturedPieces();
-	    	      }
+	    	      }*/
+	    	        playTurn++;
+	    	        saveChessBoardState();
+	    	        displayCapturedPieces();
+	    	        computerTurn(buttonPosition.getColumn());
+	    	       
 	      }
 	      else
 	      {
@@ -108,7 +119,7 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    	 bestPieceMove.setFirstMove(false);
 	    }
 	    bestPieceMove.setCurrentPosition(bestPositionMove);
-	    if (checkPromotion())
+	    /*if (checkPromotion())
 	    {
 	       	Random random = new Random();
 	       	int promotedPieceType = random.nextInt(4) + 1;
@@ -120,7 +131,10 @@ public class EasyVsComputerGame extends EasyChessGame{
 		   playTurn++;
 		   saveChessBoardState();
 	       displayCapturedPieces();
-	    }
+	    }*/
+	    playTurn++;
+		saveChessBoardState();
+	    displayCapturedPieces();
 	}
 	
 	private void generateBestMove()
@@ -132,8 +146,9 @@ public class EasyVsComputerGame extends EasyChessGame{
 	    int valueHolder = 0;
 	    ChessPiece chessPieceHolder = null;
 	    
-		for (ChessPiece chessPiece : chessBoard.getChessPieces())
+		for (int i =0;i<chessBoard.getChessPieces().size();i++)
 		{
+			ChessPiece chessPiece = chessBoard.getChessPieces().get(i);
 			if (chessPiece.getPieceColor()=="Black")
 			{
 				for (Position position : chessBoard.getValidPositions(chessPiece))
@@ -228,7 +243,8 @@ public class EasyVsComputerGame extends EasyChessGame{
 	
 	private boolean Protected(ChessPiece chessPiece,ChessPiece enemychessPiece) {
 		Swap(chessPiece,enemychessPiece);
-		for( ChessPiece  whitePiece:chessBoard.getChessPieces()) {
+		for(int i =0;i<chessBoard.getChessPieces().size();i++) {
+			 ChessPiece whitePiece = chessBoard.getChessPieces().get(i);
 			if(whitePiece.getPieceColor()=="White") {
 				for (Position position : chessBoard.getValidPositions(whitePiece)){
 					if(chessPiece.getCurrentPosition().getRow()==position.getRow()&&chessPiece.getCurrentPosition().getColumn()==position.getColumn()) {
